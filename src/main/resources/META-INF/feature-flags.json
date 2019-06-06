@@ -1,0 +1,37 @@
+[
+    {
+        "name": "feature.one",
+        "enabled": true,
+        "properties": {
+            "requires-header-role": "admin"
+        }
+    },
+    {
+        "name": "feature.two",
+        "enabled": false
+    },
+    {
+        "name": "feature.three",
+        "enabled": true
+    },
+    {
+        "name": "feature.four",
+        "enabled": false
+    },
+    {
+        "name": "feature.five",
+        "enabled": true
+    },
+    {
+        "name": "feature.six",
+        "enabled": false
+    },
+    {
+        "name": "feature.seven",
+        "enabled": true
+    },
+    {
+        "name": "feature.eight",
+        "enabled": false
+    }
+]
