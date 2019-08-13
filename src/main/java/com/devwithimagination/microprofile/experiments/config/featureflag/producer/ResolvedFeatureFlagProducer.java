@@ -16,7 +16,10 @@ public class ResolvedFeatureFlagProducer {
     private FeatureFlagResolver featureFlagResolver;
 
     @Produces
-    public ResolvedFeatureFlag createResolvedFeatureFlag(InjectionPoint injectionPoint) {
+    @FeatureProperty
+    public boolean createResolvedFeatureFlagBoolean(InjectionPoint injectionPoint) {
+
+        System.out.println("In createResolvedFeatureFlagBoolean");
 
         /* Check we have required items injected */
         if (featureFlagResolver == null) {
@@ -35,9 +38,7 @@ public class ResolvedFeatureFlagProducer {
         final String featureName = configProperty.name();
 
         /* Load the enabled state and return */
-        final boolean enabled = featureFlagResolver.isFeatureEnabled(featureName);
-
-        return new ResolvedFeatureFlag(featureName, enabled);
+        return featureFlagResolver.isFeatureEnabled(featureName);
     }
 
 }

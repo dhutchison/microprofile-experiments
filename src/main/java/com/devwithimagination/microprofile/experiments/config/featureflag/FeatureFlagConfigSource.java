@@ -6,13 +6,8 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
-import javax.cache.Cache;
-import javax.inject.Inject;
 import javax.json.bind.Jsonb;
 import javax.json.bind.JsonbBuilder;
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.HttpHeaders;
-import javax.ws.rs.core.SecurityContext;
 
 import org.eclipse.microprofile.config.spi.ConfigSource;
 
@@ -20,15 +15,6 @@ import org.eclipse.microprofile.config.spi.ConfigSource;
  * Implementation of ConfigSource for loading feature flag information.
  */
 public class FeatureFlagConfigSource implements ConfigSource {
-
-    @Context
-    private HttpHeaders headers;
-
-    @Context
-    private SecurityContext securityContext;
-
-    @Inject
-    private Cache<String, String> cache;
 
     /**
      * Map of the key to the JSON blob representing the feature definition.
@@ -63,15 +49,13 @@ public class FeatureFlagConfigSource implements ConfigSource {
 
     @Override
     public Map<String, String> getProperties() {
-        System.out.println(
-                "In get properties, with headers: " + headers + ", context: " + securityContext + ", cache: " + cache);
+
         return this.configurationData;
     }
 
     @Override
     public String getValue(String propertyName) {
-        System.out.println(
-                "In get value, with headers: " + headers + ", context: " + securityContext + ", cache: " + cache);
+
         return this.configurationData.get(propertyName);
     }
 

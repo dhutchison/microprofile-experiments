@@ -14,7 +14,6 @@ import javax.ws.rs.core.Request;
 
 import com.devwithimagination.microprofile.experiments.config.featureflag.Feature;
 import com.devwithimagination.microprofile.experiments.config.featureflag.FeatureFlagResolver;
-import com.devwithimagination.microprofile.experiments.config.featureflag.producer.ResolvedFeatureFlag;
 import com.devwithimagination.microprofile.experiments.config.featureflag.producer.FeatureProperty;
 
 @Path("/config")
@@ -34,7 +33,7 @@ public class ConfigTestController {
 
     @Inject
     @FeatureProperty(name = "feature.one")
-    private ResolvedFeatureFlag resolvedFeatureOne;
+    private boolean resolvedBooleanFeatureOne;
 
     @Path("/injected")
     @GET
@@ -67,14 +66,10 @@ public class ConfigTestController {
         }
     }
 
-    @Path("/cdi/header-resolved")
+    @Path("/cdi/header-resolved-boolean")
     @GET
-    public String getResolvedFeatureOneValueWithCDI() {
-        if (resolvedFeatureOne != null) {
-            return "Feature value for " + resolvedFeatureOne.getFeatureName() + " is " + resolvedFeatureOne.isEnabled();
-        } else {
-            return "Config value not found";
-        }
+    public String getResolvedBooleanFeatureOneValueWithCDI() {
+        return "Feature value is " + resolvedBooleanFeatureOne;
     }
 
     @Path("/cdi/header/{name}")

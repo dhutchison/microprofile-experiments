@@ -10,13 +10,14 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
 
 import javax.enterprise.util.Nonbinding;
+import javax.inject.Qualifier;
  
 /**
  * <p>Annotation for specifying the name of a feature flag to resolve and inject. </p>
  * 
  * <p>
  * This largely based on the ConfigProperty annotation, as we can't reuse it 
- * but it contains the information we woulr require. 
+ * but it contains the information we would require. 
  * </p>
  * 
  * <p>
@@ -31,6 +32,7 @@ import javax.enterprise.util.Nonbinding;
  * private ResolvedFeatureFlag featureValue;
  * </pre>
  */
+@Qualifier
 @Retention(RUNTIME)
 @Target({METHOD, FIELD, PARAMETER, TYPE})
 public @interface FeatureProperty {
