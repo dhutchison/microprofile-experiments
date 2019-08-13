@@ -16,6 +16,18 @@
     <payara.version>5.192</payara.version>
     <payaramicro.maven.plugin.version>1.0.5</payaramicro.maven.plugin.version>
   </properties>
+  <distributionManagement>
+    <repository>
+      <id>nexus</id>
+      <name>maven-releases</name>
+      <url>https://nexus.lan.davidhutchison.scot/repository/maven-releases/</url>
+    </repository>
+    <snapshotRepository>
+      <id>nexus</id>
+      <name>maven-snapshots</name>
+      <url>https://nexus.lan.davidhutchison.scot/repository/maven-snapshots/</url>
+    </snapshotRepository>
+  </distributionManagement>
   <dependencies>
     <dependency>
       <groupId>org.eclipse.microprofile</groupId>
@@ -31,7 +43,7 @@
       <version>1.0.0</version>
       <scope>provided</scope>
     </dependency>
-
+    
     <!-- For generating fake test data -->
     <dependency>
       <groupId>com.github.javafaker</groupId>
