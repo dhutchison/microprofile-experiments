@@ -34,6 +34,13 @@ public class FeatureFlagResolver {
         }
 
         /* Get the feature flag */
+        /* A safer implementation of this could check if the configuration
+         * value is already a boolean, and only perform the additional resolve 
+         * behaviour if the configuration value was a feature. 
+         * Using this approach would make it easier to override 
+         * features through the higher ordinal ConfigSources, like 
+         * system properties and environment variables. 
+         */
         final Feature feature = config.getValue(featureName, Feature.class);
 
         /* Work out if we should return it as being enabled or not. */
