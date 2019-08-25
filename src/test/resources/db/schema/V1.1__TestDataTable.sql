@@ -1,0 +1,8 @@
+CREATE TABLE test_data (
+    value VARCHAR(25) NOT NULL PRIMARY KEY
+);
+CREATE TABLE car (
+    id INT NOT NULL PRIMARY KEY,
+    license_plate VARCHAR NOT NULL,
+    color VARCHAR NOT NULL
+);
