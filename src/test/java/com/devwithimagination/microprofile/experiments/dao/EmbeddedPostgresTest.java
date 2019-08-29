@@ -1,8 +1,6 @@
 package com.devwithimagination.microprofile.experiments.dao;
 
 import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import javax.sql.DataSource;
@@ -33,19 +31,10 @@ public class EmbeddedPostgresTest {
 
         try (Connection connection = datasource.getConnection()) {
 
-            final String sql = 
-                "SELECT * FROM car";
+            final CarDAO dao = new CarDAO();
+            final int actualCount = dao.getNumberOfCars(connection);
 
-            try (PreparedStatement statement = connection.prepareStatement(sql)) {
-
-                try (ResultSet results = statement.executeQuery()) {
-
-                    Assert.assertFalse("Not expecting any rows", results.next());
-
-                }
-
-            }
-
+            Assert.assertEquals("Not expecting any rows", 0, actualCount);
 
         }
     }
