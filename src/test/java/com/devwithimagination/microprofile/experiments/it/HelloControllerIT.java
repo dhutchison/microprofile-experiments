@@ -26,7 +26,8 @@ public class HelloControllerIT {
         final URI uri = new URI(BASE_URL);
 
         HelloControllerClient client = RestClientBuilder.newBuilder()
-            .baseUri(uri).build(HelloControllerClient.class);
+            .baseUri(uri)
+            .build(HelloControllerClient.class);
 
         String message = client.sayHello();
 
