@@ -149,10 +149,99 @@
                   </execution>
               </executions>
           </plugin>
-          <plugin>
-            <!-- When multiple plugins are configured for a phase, 
+          <!-- When multiple plugins are configured for a phase, 
                 they are executed in the order they appear in the pom, 
-                so put this near the start -->
+                so put this before Jacoco so this plugin completes 
+                post-integration-test first. 
+                Initially these had been the other way around when
+                we were trying to use the failsafeArgLine, but this failed
+              -->
+          <plugin>
+              <groupId>fish.payara.maven.plugins</groupId>
+              <artifactId>payara-micro-maven-plugin</artifactId>
+              <version>${payaramicro.maven.plugin.version}</version>
+              <executions>
+                <execution>
+                  <id>package-payara</id>
+                  <phase>package</phase>
+                  <goals>
+                    <goal>bundle</goal>
+                  </goals>
+                </execution>
+                <execution>
+                  <id>start-payara</id>
+                  <goals>
+                    <goal>start</goal>
+                  </goals>
+                </execution>
+                <execution>
+                  <id>pre-integration-payara</id>
+                  <phase>pre-integration-test</phase>
+                  <goals>
+                    <goal>start</goal>
+                  </goals>
+                  <configuration>
+                    <daemon>true</daemon>
+                  </configuration>
+                </execution>
+                <execution>
+                  <id>post-integration-payara</id>
+                  <phase>post-integration-test</phase>
+                  <goals>
+                    <goal>stop</goal>
+                  </goals>
+                </execution>
+              </executions>
+              <configuration>
+                <payaraVersion>${payara.version}</payaraVersion>
+  
+                <deployWar>true</deployWar>
+  
+                <contextRoot>/</contextRoot>
+  
+                <javaCommandLineOptions>
+                  <!-- Java 9+ options -->
+                  <option>
+                    <key>--add-opens</key>
+                    <value>java.base/jdk.internal.loader=ALL-UNNAMED</value>
+                  </option>
+                  <option>
+                    <key>--add-opens</key>
+                    <value>jdk.management/com.sun.management.internal=ALL-UNNAMED</value>
+                  </option>
+                  <option>
+                    <key>--add-exports</key>
+                    <value>java.base/jdk.internal.ref=ALL-UNNAMED</value>
+                  </option>
+                  <option>
+                    <key>--add-opens</key>
+                    <value>java.base/java.lang=ALL-UNNAMED</value>
+                  </option>
+                  <option>
+                    <key>--add-opens</key>
+                    <value>java.base/java.nio=ALL-UNNAMED</value>
+                  </option>
+                  <option>
+                    <key>--add-opens</key>
+                    <value>java.base/sun.nio.ch=ALL-UNNAMED</value>
+                  </option>
+                  <option>
+                    <key>--add-opens</key>
+                    <value>java.management/sun.management=ALL-UNNAMED</value>
+                  </option>
+                  <option>
+                    <key>--add-opens</key>
+                    <value>java.base/sun.net.www.protocol.jrt=ALL-UNNAMED</value>
+                  </option>
+                  <!-- When running our integration tests, attach the jacoco agent -->
+                  <option>
+                    <value>-javaagent:${jacoco.agent.path}=destfile=target/coverage-reports/jacoco-it.exec,append=true</value>               
+                  </option>
+                </javaCommandLineOptions>
+              </configuration>
+            </plugin>
+          <plugin>
+            
             <groupId>org.jacoco</groupId>
             <artifactId>jacoco-maven-plugin</artifactId>
             <version>${jacoco.plugin.version}</version>
@@ -222,12 +311,7 @@
           -->
               <execution>
                 <id>post-integration-test</id>
-                <!-- <phase>post-integration-test</phase> -->
-                <!-- Usually this would be post-integration-test, but with 
-                     ordering we need this to be after payara micro has stopped,
-                     unless we explicitly use the dump goal to connect to a 
-                     tcp server jacoco?-->
-                <phase>verify</phase>
+                <phase>post-integration-test</phase>
                 <goals>
                   <goal>report</goal>
                 </goals>
@@ -284,93 +368,7 @@
               <argLine>${surefireArgLine}</argLine>
             </configuration>
           </plugin>
-          <plugin>
-            <groupId>fish.payara.maven.plugins</groupId>
-            <artifactId>payara-micro-maven-plugin</artifactId>
-            <version>${payaramicro.maven.plugin.version}</version>
-            <executions>
-              <execution>
-                <id>package-payara</id>
-                <phase>package</phase>
-                <goals>
-                  <goal>bundle</goal>
-                </goals>
-              </execution>
-              <execution>
-                <id>start-payara</id>
-                <goals>
-                  <goal>start</goal>
-                </goals>
-              </execution>
-              <execution>
-                <id>pre-integration-payara</id>
-                <phase>pre-integration-test</phase>
-                <goals>
-                  <goal>start</goal>
-                </goals>
-                <configuration>
-                  <daemon>true</daemon>
-                </configuration>
-              </execution>
-              <execution>
-                <id>post-integration-payara</id>
-                <phase>post-integration-test</phase>
-                <goals>
-                  <goal>stop</goal>
-                </goals>
-              </execution>
-            </executions>
-            <configuration>
-              <payaraVersion>${payara.version}</payaraVersion>
 
-              <deployWar>true</deployWar>
-
-              <contextRoot>/</contextRoot>
-
-              <javaCommandLineOptions>
-                <!-- Java 9+ options -->
-                <option>
-                  <key>--add-opens</key>
-                  <value>java.base/jdk.internal.loader=ALL-UNNAMED</value>
-                </option>
-                <option>
-                  <key>--add-opens</key>
-                  <value>jdk.management/com.sun.management.internal=ALL-UNNAMED</value>
-                </option>
-                <option>
-                  <key>--add-exports</key>
-                  <value>java.base/jdk.internal.ref=ALL-UNNAMED</value>
-                </option>
-                <option>
-                  <key>--add-opens</key>
-                  <value>java.base/java.lang=ALL-UNNAMED</value>
-                </option>
-                <option>
-                  <key>--add-opens</key>
-                  <value>java.base/java.nio=ALL-UNNAMED</value>
-                </option>
-                <option>
-                  <key>--add-opens</key>
-                  <value>java.base/sun.nio.ch=ALL-UNNAMED</value>
-                </option>
-                <option>
-                  <key>--add-opens</key>
-                  <value>java.management/sun.management=ALL-UNNAMED</value>
-                </option>
-                <option>
-                  <key>--add-opens</key>
-                  <value>java.base/sun.net.www.protocol.jrt=ALL-UNNAMED</value>
-                </option>
-                <!-- When running our integration tests, attach the jacoco agent -->
-                <option>
-                  <!-- arg line fails - spaces in a path? -->
-                  <!-- <value>${failsafeArgLine}</value> -->
-                  <!-- <value>-javaagent:/Users/david/.m2/repository/org/jacoco/org.jacoco.agent/0.8.4/org.jacoco.agent-0.8.4-runtime.jar=destfile=target/coverage-reports/jacoco-it.exec,append=true</value> -->
-                  <value>-javaagent:${jacoco.agent.path}=destfile=target/coverage-reports/jacoco-it.exec,append=true</value>               
-                </option>
-              </javaCommandLineOptions>
-            </configuration>
-          </plugin>
           <plugin>
             <artifactId>maven-failsafe-plugin</artifactId>
             <version>${maven.failsafe.version}</version>
