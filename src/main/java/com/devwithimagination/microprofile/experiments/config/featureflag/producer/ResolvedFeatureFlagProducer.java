@@ -5,7 +5,7 @@ import javax.enterprise.inject.Produces;
 import javax.enterprise.inject.spi.InjectionPoint;
 import javax.inject.Inject;
 
-import com.devwithimagination.microprofile.experiments.config.featureflag.FeatureFlagResolver;
+import com.devwithimagination.microprofile.experiments.config.featureflag.resolver.FeatureFlagResolver;
 /**
  * Class responsible for producing ResolvedFeatureFlag objects via CDI.
  */
@@ -18,8 +18,6 @@ public class ResolvedFeatureFlagProducer {
     @Produces
     @FeatureProperty
     public boolean createResolvedFeatureFlagBoolean(InjectionPoint injectionPoint) {
-
-        System.out.println("In createResolvedFeatureFlagBoolean");
 
         /* Check we have required items injected */
         if (featureFlagResolver == null) {

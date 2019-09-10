@@ -4,21 +4,30 @@ import org.eclipse.microprofile.config.Config;
 import org.eclipse.microprofile.config.ConfigProvider;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 
+import java.util.NoSuchElementException;
+
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
-import javax.ws.rs.GET;
 import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.Request;
 
 import com.devwithimagination.microprofile.experiments.config.featureflag.Feature;
-import com.devwithimagination.microprofile.experiments.config.featureflag.FeatureFlagResolver;
+import com.devwithimagination.microprofile.experiments.config.featureflag.resolver.FeatureFlagResolver;
 import com.devwithimagination.microprofile.experiments.config.featureflag.producer.FeatureProperty;
 
+/**
+ * Implementation of ConfigTestControllerIF. 
+ * 
+ * Note that when moving all the method level path annotations in to an interface,
+ * the class level one needs to stay with the implementation. 
+ */
 @Path("/config")
 @RequestScoped
-public class ConfigTestController {
+public class ConfigTestController implements ConfigTestControllerIF {
+
+    /**
+     * Message prefix used in response messages
+     */
+    private static final String RESPONSE_PREFIX = "Feature value for ";
 
     @Inject
     @ConfigProperty(name = "injected.value")
@@ -35,52 +44,44 @@ public class ConfigTestController {
     @FeatureProperty(name = "feature.one")
     private boolean resolvedBooleanFeatureOne;
 
-    @Path("/injected")
-    @GET
+    @Override
     public String getInjectedConfigValue() {
         return "Config value as Injected by CDI " + injectedValue;
     }
 
-    @Path("/lookup/{name}")
-    @GET
-    public String getLookupConfigValue(@PathParam("name") final String name, @Context final Request request) {
+    @Override
+    public String getLookupConfigValue(final String name) {
         Config config = ConfigProvider.getConfig();
 
-        System.out.println("Request: " + request);
-
-        Feature feature = config.getValue(name, Feature.class);
-        if (feature != null) {
-            return "Feature value for " + feature.getName() + " is " + feature.isEnabled();
-        } else {
+        try {
+            Feature feature = config.getValue(name, Feature.class);
+            return RESPONSE_PREFIX + feature.getName() + " is " + feature.isEnabled();
+        } catch (NoSuchElementException nse) {
             return "Config value not found";
         }
     }
 
-    @Path("/cdi/header")
-    @GET
+    @Override
     public String getFeatureOneValueWithCDI() {
         if (featureOne != null) {
-            return "Feature value for " + featureOne.getName() + " is " + featureOne.isEnabled();
+            return RESPONSE_PREFIX + featureOne.getName() + " is " + featureOne.isEnabled();
         } else {
             return "Config value not found";
         }
     }
 
-    @Path("/cdi/header-resolved-boolean")
-    @GET
+    @Override
     public String getResolvedBooleanFeatureOneValueWithCDI() {
         return "Feature value is " + resolvedBooleanFeatureOne;
     }
 
-    @Path("/cdi/header/{name}")
-    @GET
-    public String getResolvedNamedFeatureWithCDI(@PathParam("name") final String name) {
+    @Override
+    public String getResolvedNamedFeatureWithCDI(final String name) {
 
-        return "Feature value for " + name + " is " + featureFlagResolver.isFeatureEnabled(name);
+        return RESPONSE_PREFIX + name + " is " + featureFlagResolver.isFeatureEnabled(name);
     }
 
-    @Path("/lookup")
-    @GET
+    @Override
     public String getLookupConfigValue() {
         Config config = ConfigProvider.getConfig();
 

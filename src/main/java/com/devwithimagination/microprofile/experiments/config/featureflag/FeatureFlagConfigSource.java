@@ -35,7 +35,7 @@ public class FeatureFlagConfigSource implements ConfigSource {
             Feature[] features = json.fromJson(in, Feature[].class);
 
             Arrays.stream(features)
-                    .forEach((feature) -> this.configurationData.put(feature.getName(), json.toJson(feature)));
+                    .forEach(feature -> this.configurationData.put(feature.getName(), json.toJson(feature)));
         } catch (IOException e) {
             e.printStackTrace();
             throw new IllegalStateException("Failed to configure flag data", e);
