@@ -15,10 +15,10 @@ import com.devwithimagination.microprofile.experiments.config.featureflag.resolv
 import com.devwithimagination.microprofile.experiments.config.featureflag.producer.FeatureProperty;
 
 /**
- * Implementation of ConfigTestControllerIF. 
+ * Implementation of ConfigTestControllerIF.
  * 
- * Note that when moving all the method level path annotations in to an interface,
- * the class level one needs to stay with the implementation. 
+ * Note that when moving all the method level path annotations in to an
+ * interface, the class level one needs to stay with the implementation.
  */
 @Path("/config")
 @RequestScoped
@@ -30,7 +30,8 @@ public class ConfigTestController implements ConfigTestControllerIF {
     private static final String RESPONSE_PREFIX = "Feature value for ";
 
     /**
-     * A String value injected through the standard Config feature injection process. 
+     * A String value injected through the standard Config feature injection
+     * process.
      */
     @Inject
     @ConfigProperty(name = "injected.value")
@@ -43,14 +44,20 @@ public class ConfigTestController implements ConfigTestControllerIF {
     private FeatureFlagResolver featureFlagResolver;
 
     /**
-     * A Feature value injected through the standard Config feature injection process. This uses the FeatureConverter which was registered with SPI to allow the configuration feature to work out how to turn the string value into the object type requested at the injection target.  
+     * A Feature value injected through the standard Config feature injection
+     * process. This uses the FeatureConverter which was registered with SPI to
+     * allow the configuration feature to work out how to turn the string value into
+     * the object type requested at the injection target.
      */
     @Inject
     @ConfigProperty(name = "feature.one")
     private Feature featureOne;
 
     /**
-     * A feature value injected through our custom FeatureProperty/ResolvedFeatureFlagProducer. While our custom provider here uses the configuration feature behind the scenes, we needed to add our own layer to allow headers to be considered before injection. 
+     * A feature value injected through our custom
+     * FeatureProperty/ResolvedFeatureFlagProducer. While our custom provider here
+     * uses the configuration feature behind the scenes, we needed to add our own
+     * layer to allow headers to be considered before injection.
      */
     @Inject
     @FeatureProperty(name = "feature.one")
