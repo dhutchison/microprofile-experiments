@@ -29,17 +29,29 @@ public class ConfigTestController implements ConfigTestControllerIF {
      */
     private static final String RESPONSE_PREFIX = "Feature value for ";
 
+    /**
+     * A String value injected through the standard Config feature injection process. 
+     */
     @Inject
     @ConfigProperty(name = "injected.value")
     private String injectedValue;
 
+    /**
+     * The resolver implementation for turning a Feature in to a boolean
+     */
     @Inject
     private FeatureFlagResolver featureFlagResolver;
 
+    /**
+     * A Feature value injected through the standard Config feature injection process. This uses the FeatureConverter which was registered with SPI to allow the configuration feature to work out how to turn the string value into the object type requested at the injection target.  
+     */
     @Inject
     @ConfigProperty(name = "feature.one")
     private Feature featureOne;
 
+    /**
+     * A feature value injected through our custom FeatureProperty/ResolvedFeatureFlagProducer. While our custom provider here uses the configuration feature behind the scenes, we needed to add our own layer to allow headers to be considered before injection. 
+     */
     @Inject
     @FeatureProperty(name = "feature.one")
     private boolean resolvedBooleanFeatureOne;

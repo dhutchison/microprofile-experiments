@@ -11,6 +11,13 @@ import org.eclipse.microprofile.config.spi.Converter;
  */
 public class FeatureConverter implements Converter<Feature> {
 
+    /**
+     * Converts the supplied string in to a Feature instance by deserializing the
+     * input string as a JSON object.
+     * 
+     * @param value the input string to convert
+     * @return the Feature object created by deserializing the input string.
+     */
     @Override
     public Feature convert(String value) {
 

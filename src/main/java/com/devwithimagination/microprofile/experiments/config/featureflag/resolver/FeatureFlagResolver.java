@@ -20,9 +20,15 @@ import org.eclipse.microprofile.config.Config;
 @RequestScoped
 public class FeatureFlagResolver {
 
+    /**
+     * The headers associated with the request.
+     */
     @Context
     private HttpHeaders headers;
 
+    /**
+     * The config source
+     */
     @Inject
     private Config config;
 
@@ -45,13 +51,6 @@ public class FeatureFlagResolver {
         }
 
         /* Get the feature flag */
-        /*
-         * A safer implementation of this could check if the configuration value is
-         * already a boolean, and only perform the additional resolve behaviour if the
-         * configuration value was a feature. Using this approach would make it easier
-         * to override features through the higher ordinal ConfigSources, like system
-         * properties and environment variables.
-         */
         boolean resolvedValue;
         try {
             final Feature feature = config.getValue(featureName, Feature.class);

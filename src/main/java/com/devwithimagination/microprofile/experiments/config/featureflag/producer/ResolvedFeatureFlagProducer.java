@@ -6,15 +6,32 @@ import javax.enterprise.inject.spi.InjectionPoint;
 import javax.inject.Inject;
 
 import com.devwithimagination.microprofile.experiments.config.featureflag.resolver.FeatureFlagResolver;
+
 /**
- * Class responsible for producing ResolvedFeatureFlag objects via CDI.
+ * Class responsible for producing the resolved boolean representation of a
+ * Feature via CDI.
  */
 @RequestScoped
 public class ResolvedFeatureFlagProducer {
 
+    /**
+     * The resolver implementation for turning a Feature in to a boolean
+     */
     @Inject
     private FeatureFlagResolver featureFlagResolver;
 
+    /**
+     * Based on the target injection point, this will get the name of the feature to
+     * load and pass it off to the FeatureFlagResolver for the boolean value to be
+     * determined.
+     * 
+     * This expects that the injection point will have been annotated with
+     * "@FeatureProperty", if it has not an IllegalStateException will be thrown.
+     * 
+     * @param injectionPoint the target for the calculated value.
+     * @return boolean representing the state of the feature toggle. True if the
+     *         feature is enabled, false if it is not.
+     */
     @Produces
     @FeatureProperty
     public boolean createResolvedFeatureFlagBoolean(InjectionPoint injectionPoint) {
