@@ -47,7 +47,7 @@ public class ResolvedFeatureFlagProducer {
         FeatureProperty configProperty = injectionPoint.getAnnotated().getAnnotation(FeatureProperty.class);
         if (configProperty == null) {
             throw new IllegalStateException(
-                    "Attempted to inject ResolvedFeatureFlag without a FeatureProperty annotation");
+                    "Failed to find required FeatureProperty annotation");
         }
 
         final String featureName = configProperty.name();
