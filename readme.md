@@ -18,6 +18,12 @@ To launch the test page, open your browser at the following URL
 
     http://localhost:8080/index.html
 
+## Blog Post Series
+
+This generated application is being extended as I learn more about MicroProfile. 
+
+The starter to this blog post series is available [here](https://www.devwithimagination.com/2019/08/18/eclipse-microprofile/).
+
 ## Specification examples
 
 By default, there is always the creation of a JAX-RS application class to define the path on which the JAX-RS endpoints are available.
