@@ -8,9 +8,9 @@ import javax.ws.rs.client.ClientRequestFilter;
 import com.devwithimagination.microprofile.experiments.config.ConfigTestControllerIF;
 
 import org.eclipse.microprofile.rest.client.RestClientBuilder;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  * Integration test for the Configuration feature controller.
@@ -38,7 +38,7 @@ public class ConfigTestControllerIT {
      * 
      * @throws URISyntaxException if the base URL is malformed
      */
-    @Before
+    @BeforeEach
     public void setup() throws URISyntaxException {
         /*
          * As we are using the interface which is implemented server side in this case,
@@ -64,7 +64,8 @@ public class ConfigTestControllerIT {
 
         String message = client.getInjectedConfigValue();
 
-        Assert.assertEquals("Expected injected message to match", expectedValue, message);
+        Assertions.assertEquals(expectedValue, message,
+            "Expected injected message to match");
 
     }
 
@@ -81,7 +82,8 @@ public class ConfigTestControllerIT {
 
         String message = client.getLookupConfigValue();
 
-        Assert.assertEquals("Expected lookup message to match", expectedValue, message);
+        Assertions.assertEquals(expectedValue, message,
+            "Expected lookup message to match");
 
     }
 
@@ -99,7 +101,8 @@ public class ConfigTestControllerIT {
         final String expectedValue = "Feature value for feature.three is true";
         final String message = client.getLookupConfigValue("feature.three");
 
-        Assert.assertEquals("Expected lookup message to match", expectedValue, message);
+        Assertions.assertEquals(expectedValue, message,
+            "Expected lookup message to match");
     }
 
     /**
@@ -115,7 +118,8 @@ public class ConfigTestControllerIT {
         /* Do a test for a key which does not exist */
         final String message = client.getLookupConfigValue("not-a-real-key");
 
-        Assert.assertEquals("Expected lookup message to match", CONFIG_NOT_FOUND_MESSAGE, message);
+        Assertions.assertEquals(CONFIG_NOT_FOUND_MESSAGE, message, 
+            "Expected lookup message to match");
     }
 
     /**
@@ -135,7 +139,8 @@ public class ConfigTestControllerIT {
         final String expectedValue = "Feature value for future.feature is true";
         final String message = client.getResolvedNamedFeatureWithCDI("future.feature");
 
-        Assert.assertEquals("Expected lookup message to match", expectedValue, message);
+        Assertions.assertEquals(expectedValue, message,
+            "Expected lookup message to match");
     }
 
     /**
@@ -153,7 +158,8 @@ public class ConfigTestControllerIT {
         /* Do a test for a key which does not exist */
         final String message = client.getResolvedNamedFeatureWithCDI("not-a-real-key");
 
-        Assert.assertEquals("Expected lookup message to match", "Feature value for not-a-real-key is false", message);
+        Assertions.assertEquals("Feature value for not-a-real-key is false", message,
+            "Expected lookup message to match");
     }
 
     /**
@@ -173,7 +179,8 @@ public class ConfigTestControllerIT {
 
         /* do the test */
         final String message = client.getResolvedBooleanFeatureOneValueWithCDI();
-        Assert.assertEquals("Expected lookup message to match", "Feature value is true", message);
+        Assertions.assertEquals("Feature value is true", message,
+            "Expected lookup message to match");
     }
 
     /**
@@ -193,7 +200,8 @@ public class ConfigTestControllerIT {
 
         /* do the test */
         final String message = client.getResolvedBooleanFeatureOneValueWithCDI();
-        Assert.assertEquals("Expected lookup message to match", "Feature value is false", message);
+        Assertions.assertEquals("Feature value is false", message,
+            "Expected lookup message to match");
     }
 
     /**

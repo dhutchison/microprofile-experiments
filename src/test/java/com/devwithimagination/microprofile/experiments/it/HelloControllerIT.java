@@ -3,8 +3,8 @@ package com.devwithimagination.microprofile.experiments.it;
 import java.net.URI;
 
 import org.eclipse.microprofile.rest.client.RestClientBuilder;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 /**
  * Basic Integration test for confirming the Hello World service works.
@@ -31,7 +31,7 @@ public class HelloControllerIT {
 
         String message = client.sayHello();
 
-        Assert.assertEquals("Expected messages to match", "Hello World", message);
+        Assertions.assertEquals("Hello World", message, "Expected messages to match");
 
     }
 
