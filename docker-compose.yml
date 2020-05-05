@@ -1,0 +1,27 @@
+version: '2.1'
+
+services:
+
+  flyway:
+    image: flyway/flyway
+    command: -url=jdbc:postgresql://db/postgres -schemas=public -user=postgres  -connectRetries=10 migrate
+    # -password=postgres
+    volumes:
+      - ./src/test/resources/db/schema:/flyway/sql
+    depends_on:
+      db:
+        condition: service_healthy
+
+  db:
+    image: postgres:12-alpine
+    restart: unless-stopped
+    # environment:
+    #   - POSTGRES_USER=postgres
+    #   - POSTGRES_PASSWORD=postgres
+    healthcheck:
+      test: ["CMD", "pg_isready", "-q", "-U", "postgres"]
+      interval: 5s
+      timeout: 1s
+      retries: 2
+    ports:
+     - 5432:5432
