@@ -49,11 +49,11 @@ public class ResponseCodeTestController {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public Response processRequest(
-            @QueryParam("code") final Integer responseCode,
-            @QueryParam("message") final String message, 
-            @QueryParam("messageBytes") final Integer messageBytes,
-            @QueryParam("delay") final Integer delay,
-            @QueryParam("passthroughUrl") final URL passthroughUrl) {
+                                   @QueryParam("code") final Integer responseCode,
+                                   @QueryParam("message") final String message,
+                                   @QueryParam("messageBytes") final Integer messageBytes,
+                                   @QueryParam("delay") final Integer delay,
+                                   @QueryParam("passthroughUrl") final URL passthroughUrl) {
         Response response = null;
 
         /* Validate parameters */
@@ -94,9 +94,9 @@ public class ResponseCodeTestController {
                     HttpClient httpClient = HttpClient.newHttpClient();
 
                     HttpRequest passRequest = HttpRequest.newBuilder()
-                        .uri(uri)
-                        .GET()
-                        .build();
+                            .uri(uri)
+                            .GET()
+                            .build();
 
                     HttpResponse<String> passResponse = httpClient.send(passRequest, BodyHandlers.ofString());
                     entity.setPassthroughMessage(passResponse.statusCode() + ": " + passResponse.body());
@@ -107,9 +107,8 @@ public class ResponseCodeTestController {
                     entity = null;
 
                     responseBuilder = Response.status(Status.INTERNAL_SERVER_ERROR)
-                        .entity("Failed to contact passthrough API: " + e.getMessage());
+                            .entity("Failed to contact passthrough API: " + e.getMessage());
                 }
-                
 
             }
 

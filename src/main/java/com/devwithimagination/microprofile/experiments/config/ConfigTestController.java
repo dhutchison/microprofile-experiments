@@ -1,18 +1,18 @@
 package com.devwithimagination.microprofile.experiments.config;
 
-import org.eclipse.microprofile.config.Config;
-import org.eclipse.microprofile.config.ConfigProvider;
-import org.eclipse.microprofile.config.inject.ConfigProperty;
-
 import java.util.NoSuchElementException;
 
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 import javax.ws.rs.Path;
 
+import org.eclipse.microprofile.config.Config;
+import org.eclipse.microprofile.config.ConfigProvider;
+import org.eclipse.microprofile.config.inject.ConfigProperty;
+
 import com.devwithimagination.microprofile.experiments.config.featureflag.Feature;
-import com.devwithimagination.microprofile.experiments.config.featureflag.resolver.FeatureFlagResolver;
 import com.devwithimagination.microprofile.experiments.config.featureflag.producer.FeatureProperty;
+import com.devwithimagination.microprofile.experiments.config.featureflag.resolver.FeatureFlagResolver;
 
 /**
  * Implementation of ConfigTestControllerIF.

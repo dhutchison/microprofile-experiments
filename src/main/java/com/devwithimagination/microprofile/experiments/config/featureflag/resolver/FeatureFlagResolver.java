@@ -8,9 +8,9 @@ import javax.inject.Inject;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.HttpHeaders;
 
-import com.devwithimagination.microprofile.experiments.config.featureflag.Feature;
-
 import org.eclipse.microprofile.config.Config;
+
+import com.devwithimagination.microprofile.experiments.config.featureflag.Feature;
 
 /**
  * Injectable class which is designed to resolve the value of a feature flag

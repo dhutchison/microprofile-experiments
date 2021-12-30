@@ -3,3 +3,5 @@
 .settings
 .vscode
 target
+.DS_Store
+.flattened-pom.xml

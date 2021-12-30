@@ -10,7 +10,6 @@ import java.util.Map;
  */
 public class Feature implements Serializable {
 
-
     private static final long serialVersionUID = -2229909378701854571L;
 
     /**

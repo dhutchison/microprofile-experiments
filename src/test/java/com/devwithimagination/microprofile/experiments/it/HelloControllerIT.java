@@ -3,8 +3,9 @@ package com.devwithimagination.microprofile.experiments.it;
 import java.net.URI;
 
 import org.eclipse.microprofile.rest.client.RestClientBuilder;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  * Basic Integration test for confirming the Hello World service works.
@@ -15,7 +16,7 @@ public class HelloControllerIT {
      * The base API url. 
      */
     private static final String BASE_URL = System.getProperty(
-        "BASE_URL", "http://localhost:8080/data/");
+            "BASE_URL", "http://localhost:8080/data/");
 
     /**
      * Basic test case using a Rest Client
@@ -25,13 +26,13 @@ public class HelloControllerIT {
 
         final URI uri = new URI(BASE_URL);
 
-        HelloControllerClient client = RestClientBuilder.newBuilder()
-            .baseUri(uri)
-            .build(HelloControllerClient.class);
+        final HelloControllerClient client = RestClientBuilder.newBuilder()
+                .baseUri(uri)
+                .build(HelloControllerClient.class);
 
-        String message = client.sayHello();
+        final String message = client.sayHello();
 
-        Assert.assertEquals("Expected messages to match", "Hello World", message);
+        assertEquals("Hello World", message, "Expected messages to match");
 
     }
 
