@@ -3,15 +3,14 @@ package com.devwithimagination.microprofile.experiments.it.config;
 import java.net.URI;
 import java.net.URISyntaxException;
 
-import javax.ws.rs.client.ClientRequestFilter;
-
-import org.eclipse.microprofile.rest.client.RestClientBuilder;
+import org.hamcrest.Matchers;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import com.devwithimagination.microprofile.experiments.config.ConfigTestControllerIF;
+import io.restassured.RestAssured;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static io.restassured.RestAssured.*;
 
 /**
  * Integration test for the Configuration feature controller.
@@ -33,6 +32,11 @@ public class ConfigTestControllerIT {
      * The URI as the base of the API
      */
     private URI uri;
+
+    @BeforeAll
+    static void setupRestAssured() {
+        RestAssured.baseURI = BASE_URL;
+    }
 
     /**
      * Setup pre-requisites to tests.
@@ -57,15 +61,14 @@ public class ConfigTestControllerIT {
      * 
      */
     @Test
-    public void testGetInjectedValue() {
+    void testGetInjectedValue() {
 
         final String expectedValue = "Config value as Injected by CDI " + "Injected value";
 
-        ConfigTestControllerIF client = getConfiguredClient(null);
-
-        String message = client.getInjectedConfigValue();
-
-        assertEquals(expectedValue, message, "Expected injected message to match");
+        get("/config/injected")
+                .then()
+                .assertThat()
+                .body(Matchers.equalTo(expectedValue));
 
     }
 
@@ -78,11 +81,10 @@ public class ConfigTestControllerIT {
 
         final String expectedValue = "Config value from ConfigProvider " + "lookup value";
 
-        ConfigTestControllerIF client = getConfiguredClient(null);
-
-        String message = client.getLookupConfigValue();
-
-        assertEquals(expectedValue, message, "Expected lookup message to match");
+        get("/config/lookup")
+                .then()
+                .assertThat()
+                .body(Matchers.equalTo(expectedValue));
 
     }
 
@@ -93,14 +95,15 @@ public class ConfigTestControllerIT {
     @Test
     void testGetLookupValueForNamedKey() {
 
-        /* Get the client */
-        ConfigTestControllerIF client = getConfiguredClient(null);
-
         /* Do a test for a key which exists */
         final String expectedValue = "Feature value for feature.three is true";
-        final String message = client.getLookupConfigValue("feature.three");
 
-        assertEquals(expectedValue, message, "Expected lookup message to match");
+        given()
+                .pathParam("name", "feature.three")
+                .get("/config/lookup/{name}")
+                .then()
+                .assertThat()
+                .body(Matchers.equalTo(expectedValue));
     }
 
     /**
@@ -110,13 +113,11 @@ public class ConfigTestControllerIT {
     @Test
     void testGetLookupValueForUnknownNamedKey() {
 
-        /* Get the client */
-        ConfigTestControllerIF client = getConfiguredClient(null);
-
         /* Do a test for a key which does not exist */
-        final String message = client.getLookupConfigValue("not-a-real-key");
-
-        assertEquals(CONFIG_NOT_FOUND_MESSAGE, message, "Expected lookup message to match");
+        get("/config/lookup/not-a-real-key")
+                .then()
+                .assertThat()
+                .body(Matchers.equalTo(CONFIG_NOT_FOUND_MESSAGE));
     }
 
     /**
@@ -125,8 +126,6 @@ public class ConfigTestControllerIT {
      */
     @Test
     void testGetResolvedNamedFeatureWithCDI() {
-        /* Get the client */
-        ConfigTestControllerIF client = getConfiguredClient(null);
 
         /*
          * Do a test for a key which exists. For this case we will use one which we know
@@ -134,9 +133,12 @@ public class ConfigTestControllerIT {
          * config source
          */
         final String expectedValue = "Feature value for future.feature is true";
-        final String message = client.getResolvedNamedFeatureWithCDI("future.feature");
 
-        assertEquals(expectedValue, message, "Expected lookup message to match");
+        get("/config/cdi/header/future.feature")
+                .then()
+                .assertThat()
+                .body(Matchers.equalTo(expectedValue));
+
     }
 
     /**
@@ -148,13 +150,12 @@ public class ConfigTestControllerIT {
      */
     @Test
     void testGetResolvedNamedFeatureWithCDIForUnknownKey() {
-        /* Get the client */
-        ConfigTestControllerIF client = getConfiguredClient(null);
 
         /* Do a test for a key which does not exist */
-        final String message = client.getResolvedNamedFeatureWithCDI("not-a-real-key");
-
-        assertEquals("Feature value for not-a-real-key is false", message, "Expected lookup message to match");
+        get("/config/cdi/header/not-a-real-key")
+                .then()
+                .assertThat()
+                .body(Matchers.equalTo("Feature value for not-a-real-key is false"));
     }
 
     /**
@@ -164,17 +165,13 @@ public class ConfigTestControllerIT {
     @Test
     void testGetResolvedBooleanFeatureOneValueWithCDIForAdmin() {
 
-        /* Setup the header */
-        ClientRequestFilter requestFilter = requestContext -> {
-            requestContext.getHeaders().add("role", "admin");
-        };
-
-        /* Get the client */
-        ConfigTestControllerIF client = getConfiguredClient(requestFilter);
-
         /* do the test */
-        final String message = client.getResolvedBooleanFeatureOneValueWithCDI();
-        assertEquals("Feature value is true", message, "Expected lookup message to match");
+        given()
+                .header("role", "admin")
+                .get("/config/cdi/header-resolved-boolean")
+                .then()
+                .assertThat()
+                .body(Matchers.equalTo("Feature value is true"));
     }
 
     /**
@@ -184,36 +181,12 @@ public class ConfigTestControllerIT {
     @Test
     void testGetResolvedBooleanFeatureOneValueWithCDIForOffice() {
 
-        /* Setup the header */
-        ClientRequestFilter requestFilter = requestContext -> {
-            requestContext.getHeaders().add("role", "office");
-        };
-
-        /* Get the client */
-        ConfigTestControllerIF client = getConfiguredClient(requestFilter);
-
         /* do the test */
-        final String message = client.getResolvedBooleanFeatureOneValueWithCDI();
-        assertEquals("Feature value is false", message, "Expected lookup message to match");
-    }
-
-    /**
-     * Method to get a configured client to the API.
-     * 
-     * @param clientRequestFilter an optional client request filter to register with
-     *                            the rest client.
-     */
-    private ConfigTestControllerIF getConfiguredClient(ClientRequestFilter clientRequestFilter) {
-
-        /* Setup the builder */
-        final RestClientBuilder builder = RestClientBuilder.newBuilder();
-
-        if (clientRequestFilter != null) {
-            /* Register the client filter */
-            builder.register(clientRequestFilter);
-        }
-
-        /* Build the client */
-        return builder.baseUri(uri).build(ConfigTestControllerIF.class);
+        given()
+                .header("role", "office")
+                .get("/config/cdi/header-resolved-boolean")
+                .then()
+                .assertThat()
+                .body(Matchers.equalTo("Feature value is false"));
     }
 }

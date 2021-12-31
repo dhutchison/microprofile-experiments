@@ -26,11 +26,10 @@
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
-    <cxf.client.version>3.3.3</cxf.client.version>
     <payara.version>5.2021.10</payara.version>
     <payaramicro.maven.plugin.version>1.4.0</payaramicro.maven.plugin.version>
     <log.version>2.17.0</log.version>
-    <jacoco.plugin.version>0.8.4</jacoco.plugin.version>
+    <jacoco.plugin.version>0.8.7</jacoco.plugin.version>
 
     <!-- Properties for dependencies -->
     <!-- Must be listed in the dependencies section otherwise it will be null. -->
@@ -111,13 +110,6 @@
       <scope>provided</scope>
     </dependency>
 
-
-    <dependency>
-      <groupId>org.junit.jupiter</groupId>
-      <artifactId>junit-jupiter</artifactId>
-      <scope>test</scope>
-    </dependency>
-
     <!-- Additional JCache API -->
     <dependency>
       <groupId>javax.cache</groupId>
@@ -126,15 +118,42 @@
       <scope>provided</scope>
     </dependency>
 
+
+    <!-- Validation API -->
+    <dependency>
+      <groupId>jakarta.validation</groupId>
+      <artifactId>jakarta.validation-api</artifactId>
+      <version>2.0.2</version>
+      <scope>provided</scope>
+    </dependency>
+
+    <!-- Jackson components, required by generated code (for now) -->
+    <dependency>
+      <groupId>com.fasterxml.jackson.core</groupId>
+      <artifactId>jackson-annotations</artifactId>
+      <version>2.13.1</version>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>com.fasterxml.jackson.core</groupId>
+      <artifactId>jackson-databind</artifactId>
+      <version>2.13.1</version>
+      <scope>provided</scope>
+    </dependency>
+
     <!-- For generating fake test data -->
     <dependency>
       <groupId>com.github.javafaker</groupId>
       <artifactId>javafaker</artifactId>
-      <version>0.12</version>
+      <version>1.0.2</version>
     </dependency>
 
-
     <!-- Testing -->
+    <dependency>
+      <groupId>org.junit.jupiter</groupId>
+      <artifactId>junit-jupiter</artifactId>
+      <scope>test</scope>
+    </dependency>
     <dependency>
       <groupId>com.nimbusds</groupId>
       <artifactId>nimbus-jose-jwt</artifactId>
@@ -150,7 +169,7 @@
     <dependency>
       <groupId>org.bouncycastle</groupId>
       <artifactId>bcpkix-jdk15on</artifactId>
-      <version>1.53</version>
+      <version>1.70</version>
       <scope>test</scope>
     </dependency>
     <dependency>
@@ -159,18 +178,15 @@
       <version>${log.version}</version>
       <scope>test</scope>
     </dependency>
-    <!-- Test rest client implementations-->
+
+    <!-- REST API testing -->
     <dependency>
-      <groupId>org.apache.cxf</groupId>
-      <artifactId>cxf-rt-rs-mp-client</artifactId>
-      <version>${cxf.client.version}</version>
+      <groupId>io.rest-assured</groupId>
+      <artifactId>rest-assured</artifactId>
+      <version>4.4.0</version>
       <scope>test</scope>
     </dependency>
-    <dependency>
-      <groupId>org.eclipse.microprofile.rest.client</groupId>
-      <artifactId>microprofile-rest-client-api</artifactId>
-      <scope>test</scope>
-    </dependency>
+    
     <!--Test database components-->
     <dependency>
       <groupId>org.postgresql</groupId>
@@ -210,6 +226,8 @@
       <scope>test</scope>
     </dependency>
   </dependencies>
+
+
   <build>
     <finalName>${project.artifactId}</finalName>
 
@@ -220,7 +238,7 @@
         <plugin>
           <groupId>net.revelc.code.formatter</groupId>
           <artifactId>formatter-maven-plugin</artifactId>
-          <version>2.16.0</version>
+          <version>2.17.1</version>
           <configuration>
             <configFile>etc/eclipse-formatter-config.xml</configFile>
           </configuration>
@@ -561,11 +579,14 @@
 
               <configOptions>
 
+                <sourceFolder>src/gen/java</sourceFolder>
+
                 <dateLibrary>java8</dateLibrary>
                 <generatePom>false</generatePom>
                 <interfaceOnly>true</interfaceOnly>
                 <java8>true</java8>
                 <returnResponse>true</returnResponse>
+                <useSwaggerAnnotations>false</useSwaggerAnnotations>
                 <useTags>true</useTags>
               </configOptions>
             </configuration>
@@ -615,15 +636,28 @@
             <artifactId>maven-enforcer-plugin</artifactId>
             <executions>
               <execution>
+                <id>enforce-software-versions</id>
+                <goals>
+                  <goal>enforce</goal>
+                </goals>
+                <configuration>
+                  <rules>
+                    <requireMavenVersion>
+                      <version>3.3.9</version>
+                    </requireMavenVersion>
+                    <requireJavaVersion>
+                      <version>[${java.version},)</version>
+                    </requireJavaVersion>
+                  </rules>
+                </configuration>
+              </execution>
+              <execution>
                 <id>enforce-plugin-versions</id>
                 <goals>
                   <goal>enforce</goal>
                 </goals>
                 <configuration>
                   <rules>
-                    <requireJavaVersion>
-                      <version>[${java.version},)</version>
-                    </requireJavaVersion>
                     <requirePluginVersions>
                       <banLatest>true</banLatest>
                       <banRelease>true</banRelease>
@@ -674,7 +708,7 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-surefire-report-plugin</artifactId>
-        <version>${maven.failsafe.version}</version>
+        <version>3.0.0-M5</version>
         <reportSets>
           <reportSet>
             <id>integration-tests</id>
