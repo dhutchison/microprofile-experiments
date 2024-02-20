@@ -323,12 +323,6 @@
           <version>${jacoco.plugin.version}</version>
         </plugin>
 
-        <plugin>
-          <groupId>org.openapitools</groupId>
-          <artifactId>openapi-generator-maven-plugin</artifactId>
-          <version>5.3.1</version>
-        </plugin>
-
       </plugins>
     </pluginManagement>
 
@@ -559,40 +553,6 @@
         </executions>
       </plugin>
 
-
-      <plugin>
-        <groupId>org.openapitools</groupId>
-        <artifactId>openapi-generator-maven-plugin</artifactId>
-
-        <executions>
-          <execution>
-            <goals>
-              <goal>generate</goal>
-            </goals>
-            <configuration>
-              <inputSpec>${project.basedir}/src/main/resources/petstore-with-fake-endpoints-models-for-testing.yaml</inputSpec>
-              <generatorName>jaxrs-spec</generatorName>
-
-              <addCompileSourceRoot>true</addCompileSourceRoot>
-
-              <apisToGenerate>Pet</apisToGenerate>
-
-              <configOptions>
-
-                <sourceFolder>src/gen/java</sourceFolder>
-
-                <dateLibrary>java8</dateLibrary>
-                <generatePom>false</generatePom>
-                <interfaceOnly>true</interfaceOnly>
-                <java8>true</java8>
-                <returnResponse>true</returnResponse>
-                <useSwaggerAnnotations>false</useSwaggerAnnotations>
-                <useTags>true</useTags>
-              </configOptions>
-            </configuration>
-          </execution>
-        </executions>
-      </plugin>
     </plugins>
   </build>
   <profiles>

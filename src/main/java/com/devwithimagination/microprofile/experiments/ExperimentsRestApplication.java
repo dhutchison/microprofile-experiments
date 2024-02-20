@@ -36,7 +36,6 @@ public class ExperimentsRestApplication extends Application {
         classes.add(ConfigTestController.class);
         classes.add(HelloController.class);
         classes.add(MetricController.class);
-        // classes.add(PetController.class);
         classes.add(ResilienceController.class);
         classes.add(ResponseCodeTestController.class);
         classes.add(ProtectedController.class);
