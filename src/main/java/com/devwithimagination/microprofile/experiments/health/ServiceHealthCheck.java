@@ -1,11 +1,11 @@
 package com.devwithimagination.microprofile.experiments.health;
 
-import javax.enterprise.context.ApplicationScoped;
-
 import org.eclipse.microprofile.health.HealthCheck;
 import org.eclipse.microprofile.health.HealthCheckResponse;
 import org.eclipse.microprofile.health.Liveness;
 import org.eclipse.microprofile.health.Readiness;
+
+import jakarta.enterprise.context.ApplicationScoped;
 
 @Liveness
 @Readiness

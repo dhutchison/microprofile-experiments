@@ -1,26 +1,16 @@
 package com.devwithimagination.microprofile.experiments.it.config;
 
-import java.net.URI;
-import java.net.URISyntaxException;
-
 import org.hamcrest.Matchers;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import io.restassured.RestAssured;
+import com.devwithimagination.microprofile.experiments.it.AbstractBaseIT;
 
 import static io.restassured.RestAssured.*;
 
 /**
  * Integration test for the Configuration feature controller.
  */
-public class ConfigTestControllerIT {
-
-    /**
-     * The base API url.
-     */
-    private static final String BASE_URL = System.getProperty("BASE_URL", "http://localhost:8080/data/");
+public class ConfigTestControllerIT extends AbstractBaseIT {
 
     /**
      * The message which is expected to be returned when a configuration value is
@@ -29,36 +19,8 @@ public class ConfigTestControllerIT {
     private static final String CONFIG_NOT_FOUND_MESSAGE = "Config value not found";
 
     /**
-     * The URI as the base of the API
-     */
-    private URI uri;
-
-    @BeforeAll
-    static void setupRestAssured() {
-        RestAssured.baseURI = BASE_URL;
-    }
-
-    /**
-     * Setup pre-requisites to tests.
-     * 
-     * @throws URISyntaxException if the base URL is malformed
-     */
-    @BeforeEach
-    void setup() throws URISyntaxException {
-        /*
-         * As we are using the interface which is implemented server side in this case,
-         * the class level path annotation cannot be in the interface.
-         * 
-         * See:
-         * https://stackoverflow.com/questions/16950873/is-it-possible-to-define-a-jax-
-         * rs-service-interface-separated-from-its-implement
-         */
-        uri = new URI(BASE_URL + "/config");
-    }
-
-    /**
      * Test to verify the plain property loading appraoch, using injection, works.
-     * 
+     *
      */
     @Test
     void testGetInjectedValue() {
@@ -144,7 +106,7 @@ public class ConfigTestControllerIT {
     /**
      * Test to verify that using the Feature Flag Resolver with an unknown key works
      * as expected.
-     * 
+     *
      * This differs from the getLookupConfigValue tests as it will default to false
      * for a value which was not found.
      */

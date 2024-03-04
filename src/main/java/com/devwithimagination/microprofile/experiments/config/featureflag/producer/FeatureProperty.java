@@ -3,8 +3,8 @@ package com.devwithimagination.microprofile.experiments.config.featureflag.produ
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
 
-import javax.enterprise.util.Nonbinding;
-import javax.inject.Qualifier;
+import jakarta.enterprise.util.Nonbinding;
+import jakarta.inject.Qualifier;
 
 import static java.lang.annotation.ElementType.FIELD;
 import static java.lang.annotation.ElementType.METHOD;
@@ -14,17 +14,17 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
 /**
  * <p>Annotation for specifying the name of a feature flag to resolve and inject. </p>
- * 
+ *
  * <p>
- * This largely based on the ConfigProperty annotation, as we can't reuse it 
- * but it contains the information we would require. 
+ * This largely based on the ConfigProperty annotation, as we can't reuse it
+ * but it contains the information we would require.
  * </p>
- * 
+ *
  * <p>
  * This is used by the ResolvedFeatureFlagProducer to determine the name
  * of the feature flag to resolve.
  * </p>
- * 
+ *
  * <p>Example usage:</p>
  * <pre>
  * &#064;Inject

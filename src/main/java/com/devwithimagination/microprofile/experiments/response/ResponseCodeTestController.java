@@ -9,16 +9,16 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.net.http.HttpResponse.BodyHandlers;
 
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
-import javax.ws.rs.QueryParam;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
-import javax.ws.rs.core.Response.ResponseBuilder;
-import javax.ws.rs.core.Response.Status;
-
 import com.github.javafaker.Faker;
+
+import jakarta.ws.rs.GET;
+import jakarta.ws.rs.Path;
+import jakarta.ws.rs.Produces;
+import jakarta.ws.rs.QueryParam;
+import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.Response;
+import jakarta.ws.rs.core.Response.ResponseBuilder;
+import jakarta.ws.rs.core.Response.Status;
 
 /**
  * Controller allowing response codes and sizes to be simulated.
@@ -28,7 +28,7 @@ public class ResponseCodeTestController {
 
     /**
      * Controller method to generate different types of response.
-     * 
+     *
      * @param responseCode the response code to return. A BAD_REQUEST will be
      *                     returned if this parameter is missing
      * @param message      a fixed message body to use. If "messageBytes" is also
@@ -40,10 +40,10 @@ public class ResponseCodeTestController {
      *                     this time, but this parameter can be used to make a
      *                     request take longer. This will not be respected if
      *                     validation fails.
-     * @param passthroughUrl a url to call as part of this invocation. The response 
-     *                      entity from this call will be stored in the passthroughMessage 
+     * @param passthroughUrl a url to call as part of this invocation. The response
+     *                      entity from this call will be stored in the passthroughMessage
      *                      field of the response to this call. This is expected to be
-     *                      another call with an endpoint like this one. 
+     *                      another call with an endpoint like this one.
      * @return the response to the call.
      */
     @GET

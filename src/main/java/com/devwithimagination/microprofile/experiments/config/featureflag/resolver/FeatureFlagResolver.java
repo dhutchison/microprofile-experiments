@@ -3,19 +3,19 @@ package com.devwithimagination.microprofile.experiments.config.featureflag.resol
 import java.util.List;
 import java.util.NoSuchElementException;
 
-import javax.enterprise.context.RequestScoped;
-import javax.inject.Inject;
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.HttpHeaders;
-
 import org.eclipse.microprofile.config.Config;
 
 import com.devwithimagination.microprofile.experiments.config.featureflag.Feature;
 
+import jakarta.enterprise.context.RequestScoped;
+import jakarta.inject.Inject;
+import jakarta.ws.rs.core.Context;
+import jakarta.ws.rs.core.HttpHeaders;
+
 /**
  * Injectable class which is designed to resolve the value of a feature flag
  * based on a header.
- * 
+ *
  */
 @RequestScoped
 public class FeatureFlagResolver {
@@ -34,7 +34,7 @@ public class FeatureFlagResolver {
 
     /**
      * Method to look up a feature and determine if it is enabled or not
-     * 
+     *
      * @param featureName the name of the feature to look up. If a feature
      *                    definition is not found for this key then false will be
      *                    returned.
@@ -68,9 +68,9 @@ public class FeatureFlagResolver {
 
     /**
      * Basic method demonstrating how a feature flag could be resolved.
-     * 
+     *
      * This would likely use a Strategy Pattern if implemented fully.
-     * 
+     *
      * @param feature the feature to resolve the state for.
      * @return true if the feature is to be enabled, otherwise false.
      */

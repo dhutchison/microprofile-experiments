@@ -17,7 +17,7 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
- * Basic test case showing how Testcontainers can be used to connect to a database. 
+ * Basic test case showing how Testcontainers can be used to connect to a database.
  */
 @Testcontainers
 class EmbeddedPostgresTest {

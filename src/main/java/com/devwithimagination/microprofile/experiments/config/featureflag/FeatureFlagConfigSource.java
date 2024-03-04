@@ -7,14 +7,14 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
-import javax.json.bind.Jsonb;
-import javax.json.bind.JsonbBuilder;
-
 import org.eclipse.microprofile.config.spi.ConfigSource;
+
+import jakarta.json.bind.Jsonb;
+import jakarta.json.bind.JsonbBuilder;
 
 /**
  * Implementation of ConfigSource for loading feature flag information.
- * 
+ *
  * This implementation will load from a file containing a JSON array, but
  * equally could have performed an HTTP call to get this JSON array.
  */
@@ -27,7 +27,7 @@ public class FeatureFlagConfigSource implements ConfigSource {
 
     /**
      * Create a new FeatureFlagConfigSource.
-     * 
+     *
      * This will read the configuration file in as part of the object construction.
      */
     public FeatureFlagConfigSource() {

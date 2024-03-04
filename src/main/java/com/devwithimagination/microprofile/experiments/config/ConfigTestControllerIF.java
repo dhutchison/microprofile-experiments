@@ -1,11 +1,11 @@
 package com.devwithimagination.microprofile.experiments.config;
 
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
+import jakarta.ws.rs.GET;
+import jakarta.ws.rs.Path;
+import jakarta.ws.rs.PathParam;
 
 /**
- * Interface defining the endpoints for working with the 
+ * Interface defining the endpoints for working with the
  * Configuration feature.
  */
 public interface ConfigTestControllerIF {
