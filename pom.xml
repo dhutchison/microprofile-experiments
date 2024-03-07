@@ -224,6 +224,12 @@
       <classifier>runtime</classifier>
       <scope>test</scope>
     </dependency>
+    <dependency>
+      <groupId>org.jacoco</groupId>
+      <artifactId>org.jacoco.core</artifactId>
+      <version>${jacoco.plugin.version}</version>
+      <scope>test</scope>
+    </dependency>
   </dependencies>
 
 
@@ -341,9 +347,23 @@
         <artifactId>maven-dependency-plugin</artifactId>
         <executions>
           <execution>
+            <id>set-properties</id>
             <goals>
               <goal>properties</goal>
             </goals>
+          </execution>
+          <execution>
+            <id>copy-jacoco</id>
+            <goals>
+              <goal>copy-dependencies</goal>
+            </goals>
+            <phase>compile</phase>
+            <configuration>
+              <includeArtifactIds>org.jacoco.agent</includeArtifactIds>
+              <includeClassifiers>runtime</includeClassifiers>
+              <outputDirectory>${project.build.directory}/jacoco-agent</outputDirectory>
+              <stripVersion>true</stripVersion>
+            </configuration>
           </execution>
         </executions>
       </plugin>
@@ -388,7 +408,7 @@
                 unit tests have been run.
               -->
           <execution>
-            <id>post-unit-test</id>
+            <id>create-ut-report</id>
             <phase>test</phase>
             <goals>
               <goal>report</goal>
@@ -401,36 +421,13 @@
             </configuration>
           </execution>
 
-          <!--
-            Prepares the property pointing to the JaCoCo runtime agent which
-            is passed as VM argument when Maven the Failsafe plugin is executed.
-        -->
+          <!-- Create the report for IT -->
           <execution>
-            <id>pre-integration-test</id>
-            <phase>pre-integration-test</phase>
-            <goals>
-              <goal>prepare-agent</goal>
-            </goals>
-            <configuration>
-              <!-- Sets the path to the file which contains the execution data. -->
-              <destFile>${project.build.directory}/coverage-reports/jacoco-it.exec</destFile>
-              <!--
-                    Sets the name of the property containing the settings
-                    for JaCoCo runtime agent.
-                -->
-              <propertyName>failsafeArgLine</propertyName>
-            </configuration>
-          </execution>
-          <!--
-            Ensures that the code coverage report for integration tests after
-            integration tests have been run.
-        -->
-          <execution>
-            <id>post-integration-test</id>
-            <!-- <phase>post-integration-test</phase>
+            <id>create-it-report</id>
+            <phase>post-integration-test</phase>
             <goals>
               <goal>report</goal>
-            </goals> -->
+            </goals>
             <configuration>
               <!-- Sets the path to the file which contains the execution data. -->
               <dataFile>${project.build.directory}/coverage-reports/jacoco-it.exec</dataFile>
@@ -438,13 +435,14 @@
               <outputDirectory>${project.reporting.outputDirectory}/jacoco-it</outputDirectory>
             </configuration>
           </execution>
+
           <!-- create the combined report for UT and IT -->
           <execution>
             <id>merge-results</id>
-            <!-- <phase>verify</phase>
+            <phase>verify</phase>
             <goals>
               <goal>merge</goal>
-            </goals> -->
+            </goals>
             <configuration>
               <fileSets>
                 <fileSet>
@@ -459,10 +457,10 @@
           </execution>
           <execution>
             <id>post-merge-report</id>
-            <!-- <phase>verify</phase>
+            <phase>verify</phase>
             <goals>
               <goal>report</goal>
-            </goals> -->
+            </goals>
             <configuration>
               <dataFile>${project.build.directory}/coverage-reports/aggregate.exec</dataFile>
               <outputDirectory>${project.reporting.outputDirectory}/jacoco-aggregate</outputDirectory>
@@ -493,10 +491,6 @@
               <goal>integration-test</goal>
               <goal>verify</goal>
             </goals>
-            <configuration>
-              <!-- Sets the VM argument line used when integration tests are run. -->
-              <argLine>${failsafeArgLine}</argLine>
-            </configuration>
           </execution>
         </executions>
       </plugin>
@@ -529,28 +523,6 @@
               <goal>build</goal>
             </goals>
           </execution>
-          <!--
-      TODO pre-integration test need to run the image, volume mount the jacoco agent & set environment to include the agent
-        <deployWar>true</deployWar>
-
-          <contextRoot>/</contextRoot>
-
-          <javaCommandLineOptions>
-            <option>
-              <value>-javaagent:${jacoco.agent.path}=destfile=target/coverage-reports/jacoco-it.exec,append=true</value>
-            </option>
-          </javaCommandLineOptions>
-          <commandLineOptions>
-            <option>
-              <key>- -postbootcommandfile</key>
-              <value>src/main/resources/post-boot-commands.txt</value>
-            </option>
-            <option>
-              <key>- -nocluster</key>
-            </option>
-          </commandLineOptions>
-        </configuration>
-    -->
         </executions>
       </plugin>
 
