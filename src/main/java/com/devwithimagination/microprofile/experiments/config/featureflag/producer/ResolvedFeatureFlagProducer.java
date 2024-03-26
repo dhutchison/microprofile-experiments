@@ -1,11 +1,11 @@
 package com.devwithimagination.microprofile.experiments.config.featureflag.producer;
 
-import javax.enterprise.context.RequestScoped;
-import javax.enterprise.inject.Produces;
-import javax.enterprise.inject.spi.InjectionPoint;
-import javax.inject.Inject;
-
 import com.devwithimagination.microprofile.experiments.config.featureflag.resolver.FeatureFlagResolver;
+
+import jakarta.enterprise.context.RequestScoped;
+import jakarta.enterprise.inject.Produces;
+import jakarta.enterprise.inject.spi.InjectionPoint;
+import jakarta.inject.Inject;
 
 /**
  * Class responsible for producing the resolved boolean representation of a
@@ -24,10 +24,10 @@ public class ResolvedFeatureFlagProducer {
      * Based on the target injection point, this will get the name of the feature to
      * load and pass it off to the FeatureFlagResolver for the boolean value to be
      * determined.
-     * 
+     *
      * This expects that the injection point will have been annotated with
      * "@FeatureProperty", if it has not an IllegalStateException will be thrown.
-     * 
+     *
      * @param injectionPoint the target for the calculated value.
      * @return boolean representing the state of the feature toggle. True if the
      *         feature is enabled, false if it is not.

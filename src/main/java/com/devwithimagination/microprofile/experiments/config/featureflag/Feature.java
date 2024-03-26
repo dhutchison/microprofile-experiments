@@ -10,7 +10,6 @@ import java.util.Map;
  */
 public class Feature implements Serializable {
 
-
     private static final long serialVersionUID = -2229909378701854571L;
 
     /**
@@ -24,7 +23,7 @@ public class Feature implements Serializable {
     private boolean enabled;
 
     /**
-     * Map holding additional properties which may be considered when resolving if this flag should be enabled or not. 
+     * Map holding additional properties which may be considered when resolving if this flag should be enabled or not.
      */
     private Map<String, String> properties;
 

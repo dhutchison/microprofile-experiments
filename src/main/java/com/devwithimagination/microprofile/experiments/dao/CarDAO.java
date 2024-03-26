@@ -12,7 +12,7 @@ public class CarDAO {
 
     /**
      * Get the number of cars held in the database.
-     * 
+     *
      * @param connection the database connection to use.
      * @return the number of car records found.
      * @throws SQLException if an error occurs while querying the database.
