@@ -28,12 +28,7 @@
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
-    <payara.version>6.2024.1</payara.version>
     <jacoco.plugin.version>0.8.11</jacoco.plugin.version>
-
-    <!-- Properties for dependencies -->
-    <!-- Must be listed in the dependencies section otherwise it will be null. -->
-    <jacoco.agent.path>${org.jacoco:org.jacoco.agent:jar:runtime}</jacoco.agent.path>
 
   </properties>
 
