@@ -27,7 +27,7 @@
 		}
 	}, 
 	"containerEnv": {
-		"JAVA_HOME": "/usr/lib/jvm/msopenjdk-current/",
+		"JAVA_HOME": "/usr/local/sdkman/candidates/java/current/",
 		"TESTCONTAINERS_RYUK_DISABLED": "true"
 	},
 	"remoteEnv": { 
@@ -37,7 +37,7 @@
 	"customizations": {
 		"vscode": {
 			"settings": {
-				"java.jdt.ls.java.home": "/usr/lib/jvm/msopenjdk-current/"
+				"java.jdt.ls.java.home": "/usr/local/sdkman/candidates/java/current/"
 			},
 			"extensions": [
 				"ms-azuretools.vscode-docker",
