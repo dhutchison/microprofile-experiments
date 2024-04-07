@@ -6,6 +6,7 @@ import java.io.IOException;
 import org.jacoco.core.tools.ExecDumpClient;
 import org.jacoco.core.tools.ExecFileLoader;
 import org.junit.jupiter.api.AfterAll;
+import org.testcontainers.Testcontainers;
 import org.testcontainers.containers.BindMode;
 import org.testcontainers.containers.GenericContainer;
 import org.testcontainers.containers.wait.strategy.Wait;
@@ -23,6 +24,9 @@ public abstract class AbstractBaseIT {
     static final GenericContainer<?> API_CONTAINER;
 
     static {
+        /* Expose to containers a bound port Jaeger if we are running it locally */
+        Testcontainers.exposeHostPorts(4317);
+
         API_CONTAINER = new GenericContainer<>(DockerImageName.parse("devwithimagination/microprofile-experiments:latest"))
                 .withExposedPorts(8080, 6300)
                 .waitingFor(Wait.forHttp("/health").forStatusCode(200))
@@ -31,6 +35,8 @@ public abstract class AbstractBaseIT {
                  * but in this case they are the same end goal
                  */
                 .withFileSystemBind("./target/jacoco-agent", "/opt/jacoco/agent", BindMode.READ_ONLY)
+                .withEnv("OTEL_EXPORTER_OTLP_ENDPOINT", "http://host.testcontainers.internal:4317")
+                .withEnv("OTEL_EXPORTER_OTLP_PROTOCOL", "grpc")
                 .withEnv("JAVA_OPTS", "-javaagent:/opt/jacoco/agent/org.jacoco.agent-runtime.jar=output=tcpserver,address=*,port=6300")
                 .withEnv("PAYARA_OPTS", "--noHazelcast");
 
@@ -59,5 +65,7 @@ public abstract class AbstractBaseIT {
         ExecDumpClient jacocoClient = new ExecDumpClient();
         ExecFileLoader dump = jacocoClient.dump(API_CONTAINER.getHost(), API_CONTAINER.getMappedPort(6300));
         dump.save(new File("./target/coverage-reports/jacoco-it.exec"), true);
+
+        System.out.println(API_CONTAINER.getLogs());
     }
 }

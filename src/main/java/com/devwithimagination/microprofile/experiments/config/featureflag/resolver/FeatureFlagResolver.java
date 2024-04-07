@@ -7,6 +7,7 @@ import org.eclipse.microprofile.config.Config;
 
 import com.devwithimagination.microprofile.experiments.config.featureflag.Feature;
 
+import io.opentelemetry.instrumentation.annotations.WithSpan;
 import jakarta.enterprise.context.RequestScoped;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.core.Context;
@@ -40,6 +41,7 @@ public class FeatureFlagResolver {
      *                    returned.
      * @return true if the feature is enabled. Otherwise false.
      */
+    @WithSpan
     public boolean isFeatureEnabled(String featureName) {
 
         /* Check that expected configuration is available */
