@@ -1,12 +1,14 @@
 package com.devwithimagination.microprofile.experiments.health;
 
-import org.eclipse.microprofile.health.Health;
 import org.eclipse.microprofile.health.HealthCheck;
 import org.eclipse.microprofile.health.HealthCheckResponse;
+import org.eclipse.microprofile.health.Liveness;
+import org.eclipse.microprofile.health.Readiness;
 
-import javax.enterprise.context.ApplicationScoped;
+import jakarta.enterprise.context.ApplicationScoped;
 
-@Health
+@Liveness
+@Readiness
 @ApplicationScoped
 public class ServiceHealthCheck implements HealthCheck {
 

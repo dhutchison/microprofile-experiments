@@ -1,46 +1,124 @@
-<?xml version="1.0" encoding="UTF-8" ?>
-<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<?xml version="1.0" encoding="UTF-8"?>
+<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
+  xmlns="http://maven.apache.org/POM/4.0.0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.devwithimagination.microprofile</groupId>
   <artifactId>experiments</artifactId>
-  <version>0.3-SNAPSHOT</version>
+  <version>0.4.0-SNAPSHOT</version>
   <packaging>war</packaging>
+
+  <name>MicroProfile Experiments</name>
+  <description>Sample project for experimenting with JAX-RS and MicroProfile.</description>
+  <url>https://github.com/dhutchison/microprofile-experiments</url>
+  <inceptionYear>2019</inceptionYear>
+
+  <licenses>
+    <license>
+      <name>MIT</name>
+      <url>https://spdx.org/licenses/MIT.html</url>
+      <distribution>repo</distribution>
+    </license>
+  </licenses>
+
   <properties>
-    <failOnMissingWebXml>false</failOnMissingWebXml>
-    <maven.compiler.source>11</maven.compiler.source>
-    <maven.compiler.target>11</maven.compiler.target>
+    <java.version>17</java.version>
+    <maven.compiler.parameters>true</maven.compiler.parameters>
+    <maven.compiler.release>${java.version}</maven.compiler.release>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
-    <maven.dependency.plugin.version>3.1.1</maven.dependency.plugin.version>
-    <maven.surefire.version>2.22.2</maven.surefire.version>
-    <maven.failsafe.version>2.22.2</maven.failsafe.version>
-    <arquillian.version>1.1.14.Final</arquillian.version>
-    <cxf.client.version>3.3.3</cxf.client.version>
-    <mp.rest.client.version>1.3.3</mp.rest.client.version>
-    <payara.version>5.193</payara.version>
-    <payaramicro.maven.plugin.version>1.0.6</payaramicro.maven.plugin.version>
-    <pg.embedded.version>0.13.1</pg.embedded.version>
-    <flyway.version>5.2.4</flyway.version>
-    <log.version>2.12.1</log.version>
-    <jacoco.plugin.version>0.8.4</jacoco.plugin.version>
-
-    <!-- Properties for dependencies -->
-    <!-- Must be listed in the dependencies section otherwise it will be null. -->
-    <jacoco.agent.path>${org.jacoco:org.jacoco.agent:jar:runtime}</jacoco.agent.path>
+    <jacoco.plugin.version>0.8.11</jacoco.plugin.version>
 
   </properties>
+
+  <dependencyManagement>
+    <dependencies>
+      <dependency>
+        <groupId>org.eclipse.microprofile</groupId>
+        <artifactId>microprofile</artifactId>
+        <version>5.0</version>
+        <type>pom</type>
+        <scope>import</scope>
+      </dependency>
+
+      <dependency>
+        <groupId>org.junit</groupId>
+        <artifactId>junit-bom</artifactId>
+        <version>5.10.2</version>
+        <type>pom</type>
+        <scope>import</scope>
+      </dependency>
+
+      <dependency>
+        <groupId>org.testcontainers</groupId>
+        <artifactId>testcontainers-bom</artifactId>
+        <version>1.19.5</version>
+        <type>pom</type>
+        <scope>import</scope>
+      </dependency>
+    </dependencies>
+  </dependencyManagement>
+
+
   <dependencies>
+
+    <!-- microprofile components -->
     <dependency>
-      <groupId>org.eclipse.microprofile</groupId>
-      <artifactId>microprofile</artifactId>
-      <version>2.1</version>
-      <type>pom</type>
+      <groupId>org.eclipse.microprofile.config</groupId>
+      <artifactId>microprofile-config-api</artifactId>
       <scope>provided</scope>
     </dependency>
+    <dependency>
+      <groupId>jakarta.ws.rs</groupId>
+      <artifactId>jakarta.ws.rs-api</artifactId>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>jakarta.json.bind</groupId>
+      <artifactId>jakarta.json.bind-api</artifactId>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>jakarta.enterprise</groupId>
+      <artifactId>jakarta.enterprise.cdi-api</artifactId>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.eclipse.microprofile.fault-tolerance</groupId>
+      <artifactId>microprofile-fault-tolerance-api</artifactId>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.eclipse.microprofile.metrics</groupId>
+      <artifactId>microprofile-metrics-api</artifactId>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.eclipse.microprofile.jwt</groupId>
+      <artifactId>microprofile-jwt-auth-api</artifactId>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.eclipse.microprofile.health</groupId>
+      <artifactId>microprofile-health-api</artifactId>
+      <scope>provided</scope>
+    </dependency>
+
     <!-- Additional JCache API -->
     <dependency>
       <groupId>javax.cache</groupId>
       <artifactId>cache-api</artifactId>
-      <version>1.0.0</version>
+      <version>1.1.0</version>
+      <scope>provided</scope>
+    </dependency>
+
+
+    <!-- Validation API -->
+    <dependency>
+      <groupId>jakarta.validation</groupId>
+      <artifactId>jakarta.validation-api</artifactId>
+      <version>2.0.2</version>
       <scope>provided</scope>
     </dependency>
 
@@ -48,15 +126,13 @@
     <dependency>
       <groupId>com.github.javafaker</groupId>
       <artifactId>javafaker</artifactId>
-      <version>0.12</version>
+      <version>1.0.2</version>
     </dependency>
-
 
     <!-- Testing -->
     <dependency>
-      <groupId>junit</groupId>
-      <artifactId>junit</artifactId>
-      <version>4.12</version>
+      <groupId>org.junit.jupiter</groupId>
+      <artifactId>junit-jupiter</artifactId>
       <scope>test</scope>
     </dependency>
     <dependency>
@@ -74,331 +150,484 @@
     <dependency>
       <groupId>org.bouncycastle</groupId>
       <artifactId>bcpkix-jdk15on</artifactId>
-      <version>1.53</version>
+      <version>1.70</version>
       <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>org.apache.logging.log4j</groupId>
       <artifactId>log4j-slf4j18-impl</artifactId>
-      <version>${log.version}</version>
+      <version>2.18.0</version>
       <scope>test</scope>
     </dependency>
-    <!-- Test rest client implementations-->
+
+    <!-- REST API testing -->
     <dependency>
-      <groupId>org.apache.cxf</groupId>
-      <artifactId>cxf-rt-rs-mp-client</artifactId>
-      <version>${cxf.client.version}</version>
+      <groupId>io.rest-assured</groupId>
+      <artifactId>rest-assured</artifactId>
+      <version>5.4.0</version>
       <scope>test</scope>
     </dependency>
-    <dependency>
-      <groupId>org.eclipse.microprofile.rest.client</groupId>
-      <artifactId>microprofile-rest-client-api</artifactId>
-      <version>${mp.rest.client.version}</version>
-      <scope>test</scope>
-    </dependency>
+
     <!--Test database components-->
     <dependency>
-      <groupId>com.opentable.components</groupId>
-      <artifactId>otj-pg-embedded</artifactId>
-      <version>${pg.embedded.version}</version>
+      <groupId>org.postgresql</groupId>
+      <artifactId>postgresql</artifactId>
+      <version>42.3.1</version>
       <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>org.flywaydb</groupId>
       <artifactId>flyway-core</artifactId>
-      <version>${flyway.version}</version>
+      <version>10.8.1</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.flywaydb</groupId>
+      <artifactId>flyway-database-postgresql</artifactId>
+      <version>10.8.1</version>
+      <scope>test</scope>
+    </dependency>
+    <!-- Flyway depends on this -->
+    <dependency>
+      <groupId>com.fasterxml.jackson.core</groupId>
+      <artifactId>jackson-annotations</artifactId>
+      <version>2.16.1</version>
+      <scope>test</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>org.testcontainers</groupId>
+      <artifactId>testcontainers</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.testcontainers</groupId>
+      <artifactId>junit-jupiter</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.testcontainers</groupId>
+      <artifactId>postgresql</artifactId>
       <scope>test</scope>
     </dependency>
 
     <!-- Coverage agent -->
     <dependency>
-        <groupId>org.jacoco</groupId>
-        <artifactId>org.jacoco.agent</artifactId>
-        <version>${jacoco.plugin.version}</version>
-        <classifier>runtime</classifier>
-        <scope>test</scope>
+      <groupId>org.jacoco</groupId>
+      <artifactId>org.jacoco.agent</artifactId>
+      <version>${jacoco.plugin.version}</version>
+      <classifier>runtime</classifier>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.jacoco</groupId>
+      <artifactId>org.jacoco.core</artifactId>
+      <version>${jacoco.plugin.version}</version>
+      <scope>test</scope>
     </dependency>
   </dependencies>
+
+
   <build>
     <finalName>${project.artifactId}</finalName>
+
+
+    <!-- Keep alphabetic order -->
+    <pluginManagement>
+      <plugins>
+        <plugin>
+          <groupId>net.revelc.code.formatter</groupId>
+          <artifactId>formatter-maven-plugin</artifactId>
+          <version>2.23.0</version>
+          <configuration>
+            <configFile>etc/eclipse-formatter-config.xml</configFile>
+          </configuration>
+        </plugin>
+        <plugin>
+          <groupId>net.revelc.code</groupId>
+          <artifactId>impsort-maven-plugin</artifactId>
+          <version>1.9.0</version>
+          <configuration>
+            <groups>java.,javax.,org.,com.</groups>
+            <removeUnused>true</removeUnused>
+            <staticAfter>true</staticAfter>
+          </configuration>
+        </plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-compiler-plugin</artifactId>
+          <version>3.8.1</version>
+          <configuration>
+            <parameters>true</parameters>
+          </configuration>
+        </plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-clean-plugin</artifactId>
+          <version>3.1.0</version>
+        </plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-dependency-plugin</artifactId>
+          <version>3.1.1</version>
+        </plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-deploy-plugin</artifactId>
+          <version>3.0.0-M1</version>
+        </plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-enforcer-plugin</artifactId>
+          <version>3.0.0-M3</version>
+        </plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-failsafe-plugin</artifactId>
+          <version>3.0.0-M5</version>
+        </plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-install-plugin</artifactId>
+          <version>3.0.0-M1</version>
+        </plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-jar-plugin</artifactId>
+          <version>3.2.0</version>
+        </plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-resources-plugin</artifactId>
+          <version>3.2.0</version>
+        </plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-site-plugin</artifactId>
+          <version>3.9.1</version>
+        </plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-surefire-plugin</artifactId>
+          <version>3.0.0-M5</version>
+        </plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-war-plugin</artifactId>
+          <version>3.3.2</version>
+        </plugin>
+
+        <plugin>
+          <groupId>org.jacoco</groupId>
+          <artifactId>jacoco-maven-plugin</artifactId>
+          <version>${jacoco.plugin.version}</version>
+        </plugin>
+
+        <plugin>
+          <groupId>io.fabric8</groupId>
+          <artifactId>docker-maven-plugin</artifactId>
+          <version>0.44.0</version>
+        </plugin>
+
+      </plugins>
+    </pluginManagement>
+
+
+    <plugins>
+
+      <plugin>
+        <!-- Needed to process property links to dependencies.
+               See https://stackoverflow.com/a/6934552/230449 -->
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-dependency-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>set-properties</id>
+            <goals>
+              <goal>properties</goal>
+            </goals>
+          </execution>
+          <execution>
+            <id>copy-jacoco</id>
+            <goals>
+              <goal>copy-dependencies</goal>
+            </goals>
+            <phase>compile</phase>
+            <configuration>
+              <includeArtifactIds>org.jacoco.agent</includeArtifactIds>
+              <includeClassifiers>runtime</includeClassifiers>
+              <outputDirectory>${project.build.directory}/jacoco-agent</outputDirectory>
+              <stripVersion>true</stripVersion>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+      <!-- When multiple plugins are configured for a phase, 
+              they are executed in the order they appear in the pom, 
+              so put this before Jacoco so this plugin completes 
+              post-integration-test first. 
+              Initially these had been the other way around when
+              we were trying to use the failsafeArgLine, but this failed
+            -->
+
+
+
+      <plugin>
+
+        <groupId>org.jacoco</groupId>
+        <artifactId>jacoco-maven-plugin</artifactId>
+
+        <executions>
+
+          <!--
+                  Prepares the property pointing to the JaCoCo runtime agent which
+                  is passed as VM argument when Maven the Surefire plugin is executed.
+              -->
+          <execution>
+            <id>pre-unit-test</id>
+            <goals>
+              <goal>prepare-agent</goal>
+            </goals>
+            <configuration>
+              <!-- Sets the path to the file which contains the execution data. -->
+              <destFile>${project.build.directory}/coverage-reports/jacoco-ut.exec</destFile>
+              <!--
+                      Sets the name of the property containing the settings
+                      for JaCoCo runtime agent.
+                  -->
+              <propertyName>surefireArgLine</propertyName>
+            </configuration>
+          </execution>
+          <!--
+                Ensures that the code coverage report for unit tests is created after
+                unit tests have been run.
+              -->
+          <execution>
+            <id>create-ut-report</id>
+            <phase>test</phase>
+            <goals>
+              <goal>report</goal>
+            </goals>
+            <configuration>
+              <!-- Sets the path to the file which contains the execution data. -->
+              <dataFile>${project.build.directory}/coverage-reports/jacoco-ut.exec</dataFile>
+              <!-- Sets the output directory for the code coverage report. -->
+              <outputDirectory>${project.reporting.outputDirectory}/jacoco-ut</outputDirectory>
+            </configuration>
+          </execution>
+
+          <!-- Create the report for IT -->
+          <execution>
+            <id>create-it-report</id>
+            <phase>post-integration-test</phase>
+            <goals>
+              <goal>report</goal>
+            </goals>
+            <configuration>
+              <!-- Sets the path to the file which contains the execution data. -->
+              <dataFile>${project.build.directory}/coverage-reports/jacoco-it.exec</dataFile>
+              <!-- Sets the output directory for the code coverage report. -->
+              <outputDirectory>${project.reporting.outputDirectory}/jacoco-it</outputDirectory>
+            </configuration>
+          </execution>
+
+          <!-- create the combined report for UT and IT -->
+          <execution>
+            <id>merge-results</id>
+            <phase>verify</phase>
+            <goals>
+              <goal>merge</goal>
+            </goals>
+            <configuration>
+              <fileSets>
+                <fileSet>
+                  <directory>${project.build.directory}/coverage-reports</directory>
+                  <includes>
+                    <include>*.exec</include>
+                  </includes>
+                </fileSet>
+              </fileSets>
+              <destFile>${project.build.directory}/coverage-reports/aggregate.exec</destFile>
+            </configuration>
+          </execution>
+          <execution>
+            <id>post-merge-report</id>
+            <phase>verify</phase>
+            <goals>
+              <goal>report</goal>
+            </goals>
+            <configuration>
+              <dataFile>${project.build.directory}/coverage-reports/aggregate.exec</dataFile>
+              <outputDirectory>${project.reporting.outputDirectory}/jacoco-aggregate</outputDirectory>
+            </configuration>
+          </execution>
+        </executions>
+        <configuration>
+          <propertyName>jacoco.agent.argLine</propertyName>
+          <skip>false</skip>
+          <append>true</append>
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-surefire-plugin</artifactId>
+
+        <configuration>
+          <!-- Sets the VM argument line used when unit tests are run. -->
+          <argLine>${surefireArgLine}</argLine>
+        </configuration>
+      </plugin>
+
+      <plugin>
+        <artifactId>maven-failsafe-plugin</artifactId>
+        <executions>
+          <execution>
+            <goals>
+              <goal>integration-test</goal>
+              <goal>verify</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+
+      <plugin>
+        <groupId>io.fabric8</groupId>
+        <artifactId>docker-maven-plugin</artifactId>
+
+        <configuration>
+          <images>
+            <!-- A single's image configuration -->
+            <image>
+              <name>devwithimagination/microprofile-experiments</name>
+              <build>
+                <contextDir>${project.basedir}</contextDir>
+                <tags>
+                  <tag>latest</tag>
+                  <tag>${project.version}</tag>
+                </tags>
+              </build>
+            </image>
+          </images>
+        </configuration>
+
+        <executions>
+          <execution>
+            <id>build</id>
+            <phase>package</phase>
+            <goals>
+              <goal>build</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+
+    </plugins>
   </build>
   <profiles>
     <profile>
-      <id>payara-micro</id>
+      <id>qa</id>
       <activation>
-        <activeByDefault>true</activeByDefault>
+        <property>
+          <name>!quick</name>
+        </property>
       </activation>
       <build>
         <plugins>
           <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-deploy-plugin</artifactId>
-            <version>2.8.2</version>
-          </plugin>
-          <plugin>
-            <!-- Needed to process property links to dependencies.
-                 See https://stackoverflow.com/a/6934552/230449 -->
-              <groupId>org.apache.maven.plugins</groupId>
-              <artifactId>maven-dependency-plugin</artifactId>
-              <version>${maven.dependency.plugin.version}</version>
-              <executions>
-                  <execution>
-                      <goals>
-                          <goal>properties</goal>
-                      </goals>
-                  </execution>
-              </executions>
-          </plugin>
-          <!-- When multiple plugins are configured for a phase, 
-                they are executed in the order they appear in the pom, 
-                so put this before Jacoco so this plugin completes 
-                post-integration-test first. 
-                Initially these had been the other way around when
-                we were trying to use the failsafeArgLine, but this failed
-              -->
-          <plugin>
-              <groupId>fish.payara.maven.plugins</groupId>
-              <artifactId>payara-micro-maven-plugin</artifactId>
-              <version>${payaramicro.maven.plugin.version}</version>
-              <executions>
-                <execution>
-                  <id>package-payara</id>
-                  <phase>package</phase>
-                  <goals>
-                    <goal>bundle</goal>
-                  </goals>
-                </execution>
-                <execution>
-                  <id>start-payara</id>
-                  <goals>
-                    <goal>start</goal>
-                  </goals>
-                </execution>
-                <execution>
-                  <id>pre-integration-payara</id>
-                  <phase>pre-integration-test</phase>
-                  <goals>
-                    <goal>start</goal>
-                  </goals>
-                  <configuration>
-                    <daemon>true</daemon>
-                  </configuration>
-                </execution>
-                <execution>
-                  <id>post-integration-payara</id>
-                  <phase>post-integration-test</phase>
-                  <goals>
-                    <goal>stop</goal>
-                  </goals>
-                </execution>
-              </executions>
-              <configuration>
-                <payaraVersion>${payara.version}</payaraVersion>
-  
-                <deployWar>true</deployWar>
-  
-                <contextRoot>/</contextRoot>
-  
-                <javaCommandLineOptions>
-                  <!-- Java 9+ options -->
-                  <option>
-                    <key>--add-opens</key>
-                    <value>java.base/jdk.internal.loader=ALL-UNNAMED</value>
-                  </option>
-                  <option>
-                    <key>--add-opens</key>
-                    <value>jdk.management/com.sun.management.internal=ALL-UNNAMED</value>
-                  </option>
-                  <option>
-                    <key>--add-exports</key>
-                    <value>java.base/jdk.internal.ref=ALL-UNNAMED</value>
-                  </option>
-                  <option>
-                    <key>--add-opens</key>
-                    <value>java.base/java.lang=ALL-UNNAMED</value>
-                  </option>
-                  <option>
-                    <key>--add-opens</key>
-                    <value>java.base/java.nio=ALL-UNNAMED</value>
-                  </option>
-                  <option>
-                    <key>--add-opens</key>
-                    <value>java.base/sun.nio.ch=ALL-UNNAMED</value>
-                  </option>
-                  <option>
-                    <key>--add-opens</key>
-                    <value>java.management/sun.management=ALL-UNNAMED</value>
-                  </option>
-                  <option>
-                    <key>--add-opens</key>
-                    <value>java.base/sun.net.www.protocol.jrt=ALL-UNNAMED</value>
-                  </option>
-                  <!-- When running our integration tests, attach the jacoco agent -->
-                  <option>
-                    <value>-javaagent:${jacoco.agent.path}=destfile=target/coverage-reports/jacoco-it.exec,append=true</value>               
-                  </option>
-                </javaCommandLineOptions>
-                <commandLineOptions>
-                  <option>
-                    <key>--postbootcommandfile</key>
-                    <value>src/main/resources/post-boot-commands.txt</value>
-                  </option>
-                </commandLineOptions>
-              </configuration>
-            </plugin>
-          <plugin>
-            
-            <groupId>org.jacoco</groupId>
-            <artifactId>jacoco-maven-plugin</artifactId>
-            <version>${jacoco.plugin.version}</version>
-
+            <groupId>net.revelc.code.formatter</groupId>
+            <artifactId>formatter-maven-plugin</artifactId>
             <executions>
-
-              <!--
-                    Prepares the property pointing to the JaCoCo runtime agent which
-                    is passed as VM argument when Maven the Surefire plugin is executed.
-                -->
               <execution>
-                <id>pre-unit-test</id>
+                <id>format</id>
                 <goals>
-                  <goal>prepare-agent</goal>
+                  <goal>format</goal>
                 </goals>
-                <configuration>
-                  <!-- Sets the path to the file which contains the execution data. -->
-                  <destFile>${project.build.directory}/coverage-reports/jacoco-ut.exec</destFile>
-                  <!--
-                        Sets the name of the property containing the settings
-                        for JaCoCo runtime agent.
-                    -->
-                  <propertyName>surefireArgLine</propertyName>
-                </configuration>
-              </execution>
-              <!--
-                  Ensures that the code coverage report for unit tests is created after
-                  unit tests have been run.
-                -->
-              <execution>
-                <id>post-unit-test</id>
-                <phase>test</phase>
-                <goals>
-                  <goal>report</goal>
-                </goals>
-                <configuration>
-                  <!-- Sets the path to the file which contains the execution data. -->
-                  <dataFile>${project.build.directory}/coverage-reports/jacoco-ut.exec</dataFile>
-                  <!-- Sets the output directory for the code coverage report. -->
-                  <outputDirectory>${project.reporting.outputDirectory}/jacoco-ut</outputDirectory>
-                </configuration>
-              </execution>
-
-              <!--
-              Prepares the property pointing to the JaCoCo runtime agent which
-              is passed as VM argument when Maven the Failsafe plugin is executed.
-          -->
-              <execution>
-                <id>pre-integration-test</id>
-                <phase>pre-integration-test</phase>
-                <goals>
-                  <goal>prepare-agent</goal>
-                </goals>
-                <configuration>
-                  <!-- Sets the path to the file which contains the execution data. -->
-                  <destFile>${project.build.directory}/coverage-reports/jacoco-it.exec</destFile>
-                  <!--
-                      Sets the name of the property containing the settings
-                      for JaCoCo runtime agent.
-                  -->
-                  <propertyName>failsafeArgLine</propertyName>
-                </configuration>
-              </execution>
-              <!--
-              Ensures that the code coverage report for integration tests after
-              integration tests have been run.
-          -->
-              <execution>
-                <id>post-integration-test</id>
-                <phase>post-integration-test</phase>
-                <goals>
-                  <goal>report</goal>
-                </goals>
-                <configuration>
-                  <!-- Sets the path to the file which contains the execution data. -->
-                  <dataFile>${project.build.directory}/coverage-reports/jacoco-it.exec</dataFile>
-                  <!-- Sets the output directory for the code coverage report. -->
-                  <outputDirectory>${project.reporting.outputDirectory}/jacoco-it</outputDirectory>
-                </configuration>
-              </execution>
-              <!-- create the combined report for UT and IT -->
-              <execution>
-                <id>merge-results</id>
-                <phase>verify</phase>
-                <goals>
-                  <goal>merge</goal>
-                </goals>
-                <configuration>
-                  <fileSets>
-                    <fileSet>
-                      <directory>${project.build.directory}/coverage-reports</directory>
-                      <includes>
-                        <include>*.exec</include>
-                      </includes>
-                    </fileSet>
-                  </fileSets>
-                  <destFile>${project.build.directory}/coverage-reports/aggregate.exec</destFile>
-                </configuration>
-              </execution>
-              <execution>
-                <id>post-merge-report</id>
-                <phase>verify</phase>
-                <goals>
-                  <goal>report</goal>
-                </goals>
-                <configuration>
-                  <dataFile>${project.build.directory}/coverage-reports/aggregate.exec</dataFile>
-                  <outputDirectory>${project.reporting.outputDirectory}/jacoco-aggregate</outputDirectory>
-                </configuration>
+                <phase>process-sources</phase>
               </execution>
             </executions>
-            <configuration>
-              <propertyName>jacoco.agent.argLine</propertyName>
-              <skip>false</skip>
-              <append>true</append>
-            </configuration>
+          </plugin>
+          <plugin>
+            <groupId>net.revelc.code</groupId>
+            <artifactId>impsort-maven-plugin</artifactId>
+            <executions>
+              <execution>
+                <id>sort-imports</id>
+                <goals>
+                  <goal>sort</goal>
+                </goals>
+                <phase>process-sources</phase>
+              </execution>
+            </executions>
           </plugin>
           <plugin>
             <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-surefire-plugin</artifactId>
-            <version>${maven.surefire.version}</version>
-            <configuration>
-              <!-- Sets the VM argument line used when unit tests are run. -->
-              <argLine>${surefireArgLine}</argLine>
-            </configuration>
-          </plugin>
-
-          <plugin>
-            <artifactId>maven-failsafe-plugin</artifactId>
-            <version>${maven.failsafe.version}</version>
+            <artifactId>maven-enforcer-plugin</artifactId>
             <executions>
               <execution>
+                <id>enforce-software-versions</id>
                 <goals>
-                  <goal>integration-test</goal>
-                  <goal>verify</goal>
+                  <goal>enforce</goal>
                 </goals>
                 <configuration>
-                  <!-- Sets the VM argument line used when integration tests are run. -->
-                  <argLine>${failsafeArgLine}</argLine>
-                  <!--
-                        Skips integration tests if the value of skip.integration.tests property
-                        is true
-                    -->
-                  <skipTests>${skip.integration.tests}</skipTests>
+                  <rules>
+                    <requireMavenVersion>
+                      <version>3.3.9</version>
+                    </requireMavenVersion>
+                    <requireJavaVersion>
+                      <version>[${java.version},)</version>
+                    </requireJavaVersion>
+                  </rules>
+                </configuration>
+              </execution>
+              <execution>
+                <id>enforce-plugin-versions</id>
+                <goals>
+                  <goal>enforce</goal>
+                </goals>
+                <configuration>
+                  <rules>
+                    <requirePluginVersions>
+                      <banLatest>true</banLatest>
+                      <banRelease>true</banRelease>
+                      <banSnapshots>true</banSnapshots>
+                      <phases>clean,deploy,site</phases>
+                      <unCheckedPluginList>org.apache.maven.plugins:maven-failsafe-plugin,org.apache.maven.plugins:maven-surefire-plugin</unCheckedPluginList>
+                    </requirePluginVersions>
+                  </rules>
+                </configuration>
+              </execution>
+              <execution>
+                <id>ban-bad-log4j-versions</id>
+                <phase>validate</phase>
+                <goals>
+                  <goal>enforce</goal>
+                </goals>
+                <configuration>
+                  <rules>
+                    <bannedDependencies>
+                      <excludes>
+                        <exclude>org.apache.logging.log4j:log4j-core:(,2.17.0)</exclude>
+                      </excludes>
+                    </bannedDependencies>
+                  </rules>
+                  <fail>true</fail>
                 </configuration>
               </execution>
             </executions>
           </plugin>
-
         </plugins>
       </build>
+    </profile>
+    <profile>
+      <id>quick</id>
+      <activation>
+        <property>
+          <name>quick</name>
+        </property>
+      </activation>
+      <properties>
+        <skipTests>true</skipTests>
+      </properties>
     </profile>
   </profiles>
 
@@ -407,7 +636,7 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-surefire-report-plugin</artifactId>
-        <version>${maven.failsafe.version}</version>
+        <version>3.0.0-M5</version>
         <reportSets>
           <reportSet>
             <id>integration-tests</id>

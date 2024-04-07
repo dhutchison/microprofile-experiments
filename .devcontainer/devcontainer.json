@@ -1,0 +1,63 @@
+// For format details, see https://aka.ms/devcontainer.json. For config options, see the
+// README at: https://github.com/devcontainers/templates/tree/main/src/java
+{
+	"name": "Java",
+	// Or use a Dockerfile or Docker Compose file. More info: https://containers.dev/guide/dockerfile
+	"image": "mcr.microsoft.com/devcontainers/java:1-17-bullseye",
+
+	"features": {
+		// "ghcr.io/devcontainers/features/java:1": {
+		// 	"installMaven": true,
+		// 	"version": "17",
+		// 	"jdkDistro": "ms",
+		// 	"mavenVersion": "latest"
+		// },
+		"ghcr.io/devcontainers/features/java:1": {
+			"installMaven": true,
+			"version": "17",
+			"jdkDistro": "amzn",
+			"mavenVersion": "latest"
+		},
+		"ghcr.io/devcontainers/features/docker-in-docker:2": {
+			"moby": true,
+			"installDockerBuildx": true,
+			"installDockerComposeSwitch": true,
+			"version": "latest",
+			"dockerDashComposeVersion": "latest"
+		}
+	}, 
+	"containerEnv": {
+		"JAVA_HOME": "/usr/local/sdkman/candidates/java/current/",
+		"TESTCONTAINERS_RYUK_DISABLED": "true"
+	},
+	"remoteEnv": { 
+		"LOCAL_WORKSPACE_FOLDER": "${localWorkspaceFolder}" 
+	},
+	// Configure tool-specific properties.
+	"customizations": {
+		"vscode": {
+			"settings": {
+				"java.jdt.ls.java.home": "/usr/local/sdkman/candidates/java/current/"
+			},
+			"extensions": [
+				"ms-azuretools.vscode-docker",
+				"redhat.fabric8-analytics",
+				"vscjava.vscode-java-pack",
+				"DotJoshJohnson.xml"
+			]
+		}
+	},
+	"mounts": [
+		"source=${localEnv:HOME}/.m2,target=/home/vscode/.m2,type=bind,consistency=cached"
+	]
+	
+
+	// Use 'forwardPorts' to make a list of ports inside the container available locally.
+	// "forwardPorts": [],
+
+	// Use 'postCreateCommand' to run commands after the container is created.
+	// "postCreateCommand": "java -version",
+
+	// Uncomment to connect as root instead. More info: https://aka.ms/dev-containers-non-root.
+	// "remoteUser": "root"
+}

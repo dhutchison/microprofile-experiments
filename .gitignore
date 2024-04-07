@@ -1,5 +1,8 @@
 .classpath
 .project
 .settings
+.idea
 .vscode
 target
+.DS_Store
+.flattened-pom.xml

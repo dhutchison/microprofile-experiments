@@ -4,5 +4,5 @@ set configs.config.server-config.monitoring-service.module-monitoring-levels.jdb
 set configs.config.server-config.monitoring-service.module-monitoring-levels.http-service=HIGH
 
 # Enable request tracing (required for OpenTracing)
-set-requesttracing-configuration --thresholdValue=25 --enabled=true --target=server-config --thresholdUnit=MICROSECONDS --dynamic=true
-requesttracing-log-notifier-configure --dynamic=true --enabled=true --target=server-config
+# set-requesttracing-configuration --thresholdValue=25 --enabled=true --target=server-config --thresholdUnit=MICROSECONDS --dynamic=true
+# requesttracing-log-notifier-configure --dynamic=true --enabled=true --target=server-config
