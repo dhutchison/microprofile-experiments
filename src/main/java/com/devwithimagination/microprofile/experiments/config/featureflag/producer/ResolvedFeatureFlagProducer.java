@@ -2,7 +2,6 @@ package com.devwithimagination.microprofile.experiments.config.featureflag.produ
 
 import com.devwithimagination.microprofile.experiments.config.featureflag.resolver.FeatureFlagResolver;
 
-import io.opentelemetry.instrumentation.annotations.WithSpan;
 import jakarta.enterprise.context.RequestScoped;
 import jakarta.enterprise.inject.Produces;
 import jakarta.enterprise.inject.spi.InjectionPoint;
@@ -35,7 +34,6 @@ public class ResolvedFeatureFlagProducer {
      */
     @Produces
     @FeatureProperty
-    @WithSpan
     public boolean createResolvedFeatureFlagBoolean(InjectionPoint injectionPoint) {
 
         /* Check we have required items injected */

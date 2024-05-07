@@ -35,10 +35,14 @@ public abstract class AbstractBaseIT {
                  * but in this case they are the same end goal
                  */
                 .withFileSystemBind("./target/jacoco-agent", "/opt/jacoco/agent", BindMode.READ_ONLY)
+                .withFileSystemBind("./target/otel-agent-extensions", "/opt/otel-agent-extensions", BindMode.READ_ONLY)
+                // regex-class-instrumentation.jar
                 .withEnv("OTEL_EXPORTER_OTLP_ENDPOINT", "http://host.testcontainers.internal:4317")
                 .withEnv("OTEL_EXPORTER_OTLP_PROTOCOL", "grpc")
-                .withEnv("JAVA_OPTS", "-javaagent:/opt/jacoco/agent/org.jacoco.agent-runtime.jar=output=tcpserver,address=*,port=6300")
-                .withEnv("PAYARA_OPTS", "--noHazelcast");
+                .withEnv("JAVA_OPTS",
+                        "-javaagent:/opt/jacoco/agent/org.jacoco.agent-runtime.jar=output=tcpserver,address=*,port=6300 -Dotel.javaagent.extensions=/opt/otel-agent-extensions")
+                .withEnv("PAYARA_OPTS", "--noHazelcast")
+                .withReuse(true);
 
         API_CONTAINER.start();
 

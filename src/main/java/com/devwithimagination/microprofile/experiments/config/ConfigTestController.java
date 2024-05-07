@@ -10,7 +10,6 @@ import com.devwithimagination.microprofile.experiments.config.featureflag.Featur
 import com.devwithimagination.microprofile.experiments.config.featureflag.producer.FeatureProperty;
 import com.devwithimagination.microprofile.experiments.config.featureflag.resolver.FeatureFlagResolver;
 
-import io.opentelemetry.instrumentation.annotations.WithSpan;
 import jakarta.enterprise.context.RequestScoped;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.Path;
@@ -91,7 +90,6 @@ public class ConfigTestController implements ConfigTestControllerIF {
     }
 
     @Override
-    @WithSpan
     public String getResolvedBooleanFeatureOneValueWithCDI() {
         return "Feature value is " + resolvedBooleanFeatureOne;
     }
