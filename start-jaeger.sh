@@ -11,4 +11,4 @@ docker run --rm --name jaeger \
   -p 14268:14268 \
   -p 14269:14269 \
   -p 9411:9411 \
-  jaegertracing/all-in-one:1.55
+  jaegertracing/all-in-one:1.71.0

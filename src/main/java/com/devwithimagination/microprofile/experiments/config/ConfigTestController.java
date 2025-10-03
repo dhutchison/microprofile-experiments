@@ -12,6 +12,7 @@ import com.devwithimagination.microprofile.experiments.config.featureflag.resolv
 
 import jakarta.enterprise.context.RequestScoped;
 import jakarta.inject.Inject;
+import jakarta.inject.Provider;
 import jakarta.ws.rs.Path;
 
 /**
@@ -35,7 +36,7 @@ public class ConfigTestController implements ConfigTestControllerIF {
      */
     @Inject
     @ConfigProperty(name = "injected.value")
-    private String injectedValue;
+    private Provider<String> injectedValue;
 
     /**
      * The resolver implementation for turning a Feature in to a boolean
@@ -51,7 +52,7 @@ public class ConfigTestController implements ConfigTestControllerIF {
      */
     @Inject
     @ConfigProperty(name = "feature.one")
-    private Feature featureOne;
+    private Provider<Feature> featureOne;
 
     /**
      * A feature value injected through our custom
@@ -61,11 +62,11 @@ public class ConfigTestController implements ConfigTestControllerIF {
      */
     @Inject
     @FeatureProperty(name = "feature.one")
-    private boolean resolvedBooleanFeatureOne;
+    private Provider<Boolean> resolvedBooleanFeatureOne;
 
     @Override
     public String getInjectedConfigValue() {
-        return "Config value as Injected by CDI " + injectedValue;
+        return "Config value as Injected by CDI " + injectedValue.get();
     }
 
     @Override
@@ -82,8 +83,9 @@ public class ConfigTestController implements ConfigTestControllerIF {
 
     @Override
     public String getFeatureOneValueWithCDI() {
-        if (featureOne != null) {
-            return RESPONSE_PREFIX + featureOne.getName() + " is " + featureOne.isEnabled();
+        Feature featureOneValue = featureOne.get();
+        if (featureOneValue != null) {
+            return RESPONSE_PREFIX + featureOneValue.getName() + " is " + featureOneValue.isEnabled();
         } else {
             return "Config value not found";
         }
@@ -91,7 +93,7 @@ public class ConfigTestController implements ConfigTestControllerIF {
 
     @Override
     public String getResolvedBooleanFeatureOneValueWithCDI() {
-        return "Feature value is " + resolvedBooleanFeatureOne;
+        return "Feature value is " + resolvedBooleanFeatureOne.get();
     }
 
     @Override

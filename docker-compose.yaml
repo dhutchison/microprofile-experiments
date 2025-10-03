@@ -1,0 +1,28 @@
+services:
+  api:
+    image: devwithimagination/microprofile-experiments:latest
+    ports:
+      - "8080:8080"
+      - "6300:6300"
+    volumes:
+      - ./target/jacoco-agent:/opt/jacoco/agent:ro
+      - ./target/otel-agent-extensions:/opt/otel-agent-extensions:ro
+    environment:
+      - OTEL_EXPORTER_OTLP_ENDPOINT=http://host.docker.internal:4317
+      - OTEL_EXPORTER_OTLP_PROTOCOL=grpc
+      - OTEL_METRICS_EXPORTER=none
+      - OTEL_INSTRUMENTATION_SERVLET_ENABLED=false
+      - OTEL_INSTRUMENTATION_GRIZZLY_ENABLED=false
+      # - OTEL_INSTRUMENTATION_JAXRS_ENABLED=true
+      - OTEL_INSTRUMENTATION_JAXRS_3_0_ENABLED=true
+      - OTEL_INSTRUMENTATION_JERSEY_ENABLED=false
+      - OTEL_INSTRUMENTATION_COMMON_EXPERIMENTAL_CONTROLLER_TELEMETRY_ENABLED=true
+      - OTEL_JAVAAGENT_DEBUG=true
+      - JAVA_OPTS=-javaagent:/opt/jacoco/agent/org.jacoco.agent-runtime.jar=output=tcpserver,address=*,port=6300 -Dotel.javaagent.extensions=/opt/otel-agent-extensions
+      - PAYARA_OPTS=--noHazelcast
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:8080/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s

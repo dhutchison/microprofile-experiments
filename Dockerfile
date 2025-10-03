@@ -18,12 +18,13 @@ USER payara
 WORKDIR ${PAYARA_HOME}
 
 # Install and configure opentelemetry agent
-RUN wget --no-verbose -O ${PAYARA_HOME}/opentelemetry-agent.jar https://github.com/open-telemetry/opentelemetry-java-instrumentation/releases/latest/download/opentelemetry-javaagent.jar
+# RUN wget --no-verbose -O ${PAYARA_HOME}/opentelemetry-agent.jar https://github.com/open-telemetry/opentelemetry-java-instrumentation/releases/latest/download/opentelemetry-javaagent.jar
+RUN wget --no-verbose -O ${PAYARA_HOME}/opentelemetry-agent.jar https://github.com/aws-observability/aws-otel-java-instrumentation/releases/latest/download/aws-opentelemetry-agent.jar
 # RUN wget --no-verbose -O ${PAYARA_HOME}/opentelemetry-agent.jar https://github.com/aws-observability/aws-otel-java-instrumentation/releases/latest/download/aws-opentelemetry-agent.jar
 ENV JAVA_TOOL_OPTIONS=-javaagent:${PAYARA_HOME}/opentelemetry-agent.jar
 
 # Download specific version of Payara
-ARG PAYARA_VERSION="6.2024.4"
+ARG PAYARA_VERSION="6.2025.6"
 ENV PAYARA_VERSION="$PAYARA_VERSION"
 RUN wget --no-verbose -O ${PAYARA_HOME}/payara-micro.jar https://repo1.maven.org/maven2/fish/payara/extras/payara-micro/${PAYARA_VERSION}/payara-micro-${PAYARA_VERSION}.jar
 

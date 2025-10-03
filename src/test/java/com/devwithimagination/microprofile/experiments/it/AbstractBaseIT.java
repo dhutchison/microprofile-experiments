@@ -7,10 +7,9 @@ import org.jacoco.core.tools.ExecDumpClient;
 import org.jacoco.core.tools.ExecFileLoader;
 import org.junit.jupiter.api.AfterAll;
 import org.testcontainers.Testcontainers;
-import org.testcontainers.containers.BindMode;
-import org.testcontainers.containers.GenericContainer;
+import org.testcontainers.containers.ContainerState;
+import org.testcontainers.containers.DockerComposeContainer;
 import org.testcontainers.containers.wait.strategy.Wait;
-import org.testcontainers.utility.DockerImageName;
 
 import io.restassured.RestAssured;
 
@@ -21,34 +20,22 @@ import io.restassured.RestAssured;
  */
 public abstract class AbstractBaseIT {
 
-    static final GenericContainer<?> API_CONTAINER;
+    static final DockerComposeContainer<?> COMPOSE_CONTAINER;
 
     static {
         /* Expose to containers a bound port Jaeger if we are running it locally */
         Testcontainers.exposeHostPorts(4317);
 
-        API_CONTAINER = new GenericContainer<>(DockerImageName.parse("devwithimagination/microprofile-experiments:latest"))
-                .withExposedPorts(8080, 6300)
-                .waitingFor(Wait.forHttp("/health").forStatusCode(200))
-                /*
-                 * I've not implemented a healthcheck, but there is a strategy for waiting for the container to be healthy,
-                 * but in this case they are the same end goal
-                 */
-                .withFileSystemBind("./target/jacoco-agent", "/opt/jacoco/agent", BindMode.READ_ONLY)
-                .withFileSystemBind("./target/otel-agent-extensions", "/opt/otel-agent-extensions", BindMode.READ_ONLY)
-                // regex-class-instrumentation.jar
-                .withEnv("OTEL_EXPORTER_OTLP_ENDPOINT", "http://host.testcontainers.internal:4317")
-                .withEnv("OTEL_EXPORTER_OTLP_PROTOCOL", "grpc")
-                .withEnv("JAVA_OPTS",
-                        "-javaagent:/opt/jacoco/agent/org.jacoco.agent-runtime.jar=output=tcpserver,address=*,port=6300 -Dotel.javaagent.extensions=/opt/otel-agent-extensions")
-                .withEnv("PAYARA_OPTS", "--noHazelcast")
-                .withReuse(true);
+        COMPOSE_CONTAINER = new DockerComposeContainer<>(new File("docker-compose.yml"))
+                .withExposedService("api", 8080, Wait.forHttp("/health").forStatusCode(200))
+                .withExposedService("api", 6300);
 
-        API_CONTAINER.start();
+        COMPOSE_CONTAINER.start();
 
         /* Setup the base URL for RestAssured */
+        ContainerState apiContainer = COMPOSE_CONTAINER.getContainerByServiceName("api").get();
         final String baseUrl = System.getProperty(
-                "BASE_URL", "http://" + API_CONTAINER.getHost() + ":" + API_CONTAINER.getMappedPort(8080) + "/experiments/data/");
+                "BASE_URL", "http://" + apiContainer.getHost() + ":" + apiContainer.getMappedPort(8080) + "/experiments/data/");
 
         System.out.println(baseUrl);
 
@@ -66,10 +53,13 @@ public abstract class AbstractBaseIT {
          *
          * Then we have called it before the container is automatically exited.
          */
+
+        ContainerState apiContainer = COMPOSE_CONTAINER.getContainerByServiceName("api").get();
+
         ExecDumpClient jacocoClient = new ExecDumpClient();
-        ExecFileLoader dump = jacocoClient.dump(API_CONTAINER.getHost(), API_CONTAINER.getMappedPort(6300));
+        ExecFileLoader dump = jacocoClient.dump(apiContainer.getHost(), apiContainer.getMappedPort(6300));
         dump.save(new File("./target/coverage-reports/jacoco-it.exec"), true);
 
-        System.out.println(API_CONTAINER.getLogs());
+        System.out.println(apiContainer.getLogs());
     }
 }

@@ -42,5 +42,4 @@ public class ExperimentsRestApplication extends Application {
 
         return classes;
     }
-
 }
